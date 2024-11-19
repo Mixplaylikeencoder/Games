@@ -126,7 +126,7 @@ function Library:CreateWindow(Options)
     Window["MLabel"] = Instance.new("TextLabel", Window["TitleContainer"])
     Window["MLabel"].Text = "M"
     Window["MLabel"].Font = Enum.Font.GothamBold
-    Window["MLabel"].TextSize = 20
+    Window["MLabel"].TextSize = 24
     Window["MLabel"].TextColor3 = Color3.fromRGB(255, 255, 255)
     Window["MLabel"].BackgroundTransparency = 1
     Window["MLabel"].Size = UDim2.new(0, 20, 0, 20)
