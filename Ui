@@ -120,7 +120,7 @@ function Library:CreateWindow(Options)
     titleLayout.FillDirection = Enum.FillDirection.Horizontal
     titleLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     titleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    titleLayout.Padding = UDim.new(0, 10) -- Отступ между "M" и заголовком
+    titleLayout.Padding = UDim.new(0, 7) -- Отступ между "M" и заголовком
 
     -- Добавление буквы "M" в левый верхний угол TitleContainer
     Window["MLabel"] = Instance.new("TextLabel", Window["TitleContainer"])
