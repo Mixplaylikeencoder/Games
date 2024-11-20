@@ -258,7 +258,25 @@ function Library:CreateWindow(Options)
     Window["14"].PaddingRight = UDim.new(0, 10)
     Window["14"].PaddingLeft = UDim.new(0, 10)
     Window["14"].PaddingBottom = UDim.new(0, 8)
-    
+
+    	-- StarterGui.Emperion.Notifications
+	Window["16"] = Instance.new("Frame", Window["1"]);
+	Window["16"]["BorderSizePixel"] = 0;
+	Window["16"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
+	Window["16"]["AnchorPoint"] = Vector2.new(1, 0);
+	Window["16"]["Size"] = UDim2.new(0, 300, 1, -10);
+	Window["16"]["Position"] = UDim2.new(1, 0, 0, 0);
+	Window["16"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+	Window["16"]["Name"] = [[Notifications]];
+	Window["16"]["BackgroundTransparency"] = 1;
+
+	-- StarterGui.Emperion.Notifications.UIListLayout
+	Window["17"] = Instance.new("UIListLayout", Window["16"]);
+	Window["17"]["HorizontalAlignment"] = Enum.HorizontalAlignment.Center;
+	Window["17"]["Padding"] = UDim.new(0, 10);
+	Window["17"]["VerticalAlignment"] = Enum.VerticalAlignment.Bottom;
+	Window["17"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+
     -- StarterGui.Emperion.Main.Navigation.Holder.UIListLayout
     Window["15"] = Instance.new("UIListLayout", Window["13"])
     Window["15"].Padding = UDim.new(0, 7)
@@ -342,115 +360,196 @@ function Library:CreateWindow(Options)
         end)
         
         function Window:Notification(Options)
-            -- Проверка и валидирование переданных параметров
             Options = Library:Validate({
-                Title = "Notification", -- Заголовок уведомления
-                Description = "This is an example notification!", -- Описание уведомления
+                Title = "Notification",
+                Description = "This is an example notification!",
                 Button = {
-                    Name = "Okay!", -- Имя кнопки
-                    Callback = function() end, -- Обработчик кнопки
-                },
-                Duration = 5, -- Продолжительность в секундах до автозакрытия (по умолчанию)
-                BackgroundColor = Color3.fromRGB(75, 0, 130), -- Цвет фона уведомления
-                StrokeColor = Color3.fromRGB(150, 0, 150), -- Цвет обводки уведомления
+                    Name = "Okay!",
+                    Callback = function()
+                    end,
+                }
             }, Options)
-        
-            -- Создаем структуру уведомления
+            
             local Notification = {
                 Hover = false,
                 MouseDown = false
             }
         
-            -- Основная рамка уведомления
-            Notification.Frame = Instance.new("Frame", Window["20"])
-            Notification.Frame.BorderSizePixel = 0
-            Notification.Frame.BackgroundColor3 = Options.BackgroundColor
-            Notification.Frame.AnchorPoint = Vector2.new(1, 1)
-            Notification.Frame.Size = UDim2.new(0, 279, 0, 155)
-            Notification.Frame.Position = UDim2.new(1, -10, 1, -10)
-            Notification.Frame.Name = "Notification"
-            
-            -- Скругление углов
-            Instance.new("UICorner", Notification.Frame)
+            -- Notification Frame
+            Notification["3"] = Instance.new("Frame", Window["16"])
+            Notification["3"]["BorderSizePixel"] = 0
+            Notification["3"]["BackgroundColor3"] = Color3.fromRGB(23, 23, 23)
+            Notification["3"]["AnchorPoint"] = Vector2.new(1, 1)
+            Notification["3"]["Size"] = UDim2.new(0, 279, 0, 155)
+            Notification["3"]["Position"] = UDim2.new(1, -10, 1, -10)
+            Notification["3"]["BorderColor3"] = Color3.fromRGB(0, 0, 0)
+            Notification["3"]["Name"] = "Notification"
         
-            -- Масштаб
-            local Scale = Instance.new("UIScale", Notification.Frame)
-            Scale.Scale = 0.5
+            -- Notification UICorner
+            Notification["4"] = Instance.new("UICorner", Notification["3"])
         
-            -- Обводка
-            local Stroke = Instance.new("UIStroke", Notification.Frame)
-            Stroke.Transparency = 0.9
-            Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            Stroke.Color = Options.StrokeColor
+            -- Notification UIScale
+            Notification["12"] = Instance.new("UIScale", Notification["3"])
+            Notification["12"]["Scale"] = 0.5
         
-            -- Заголовок
-            local TopBar = Instance.new("Frame", Notification.Frame)
-            TopBar.BackgroundColor3 = Options.BackgroundColor
-            TopBar.Size = UDim2.new(1, 0, -0.06107, 40)
-            TopBar.Name = "TopBar"
-            
-            local Title = Instance.new("TextLabel", TopBar)
-            Title.Text = Options.Title
-            Title.TextSize = 18
-            Title.Font = Enum.Font.GothamBold
-            Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Title.BackgroundTransparency = 1
-            Title.Size = UDim2.new(1, -10, 1, 0)
-            Title.Position = UDim2.new(0, 10, 0, 0)
-            Title.TextXAlignment = Enum.TextXAlignment.Left
+            -- Notification UIStroke
+            Notification["5"] = Instance.new("UIStroke", Notification["3"])
+            Notification["5"]["Transparency"] = 0.9
+            Notification["5"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border
+            Notification["5"]["Color"] = Color3.fromRGB(255, 255, 255)
         
-            -- Основной текст уведомления
-            local Description = Instance.new("TextLabel", Notification.Frame)
-            Description.Text = Options.Description
-            Description.TextWrapped = true
-            Description.TextSize = 16
-            Description.Font = Enum.Font.Gotham
-            Description.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Description.BackgroundTransparency = 1
-            Description.Size = UDim2.new(1, -20, 0.5, 0)
-            Description.Position = UDim2.new(0.5, 0, 0.45, 0)
-            Description.AnchorPoint = Vector2.new(0.5, 0)
+            -- Notification Button
+            Notification["6"] = Instance.new("TextLabel", Notification["3"])
+            Notification["6"]["BorderSizePixel"] = 0
+            Notification["6"]["BackgroundColor3"] = Color3.fromRGB(29, 29, 29)
+            Notification["6"]["TextSize"] = 16
+            Notification["6"]["TextTransparency"] = 0.2
+            Notification["6"]["FontFace"] = Font.new("rbxassetid://11702779517", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            Notification["6"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["6"]["AnchorPoint"] = Vector2.new(0, 1)
+            Notification["6"]["Size"] = UDim2.new(1, -20, 0, 35)
+            Notification["6"]["Text"] = "Okay!"
+            Notification["6"]["Name"] = "Button"
+            Notification["6"]["Position"] = UDim2.new(0, 10, 1.008, -10)
+            Notification["6"]["Visible"] = false
+            Notification["6"]["ZIndex"] = 10
         
-            -- Кнопка "Okay!" (если задана)
-            if Options.Button then
-                local Button = Instance.new("TextButton", Notification.Frame)
-                Button.Text = Options.Button.Name
-                Button.TextSize = 16
-                Button.Font = Enum.Font.GothamBold
-                Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-                Button.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
-                Button.Size = UDim2.new(1, -20, 0, 35)
-                Button.Position = UDim2.new(0, 10, 1, -45)
-                Instance.new("UICorner", Button)
-            
-                -- Обработчик нажатия на кнопку "Okay"
-                Button.MouseButton1Click:Connect(function()
-                    Options.Button.Callback()  -- Выполняем колбэк
-                    Notification:Destroy()  -- Удаляем уведомление после клика
-                end)
-            end
+            -- Button UIStroke
+            Notification["8"] = Instance.new("UIStroke", Notification["6"])
+            Notification["8"]["Transparency"] = 0.96
+            Notification["8"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border
+            Notification["8"]["Color"] = Color3.fromRGB(255, 255, 255)
         
-            -- Закрытие уведомления
+            -- TopBar
+            Notification["9"] = Instance.new("Frame", Notification["3"])
+            Notification["9"]["BorderSizePixel"] = 0
+            Notification["9"]["BackgroundColor3"] = Color3.fromRGB(25, 25, 25)
+            Notification["9"]["Size"] = UDim2.new(1, 0, -0.06107, 40)
+            Notification["9"]["Name"] = "TopBar"
+        
+            -- TopBar Title
+            Notification["b"] = Instance.new("TextLabel", Notification["9"])
+            Notification["b"]["BorderSizePixel"] = 0
+            Notification["b"]["TextXAlignment"] = Enum.TextXAlignment.Left
+            Notification["b"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["b"]["TextSize"] = 18
+            Notification["b"]["FontFace"] = Font.new("rbxassetid://11702779517", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            Notification["b"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["b"]["BackgroundTransparency"] = 1
+            Notification["b"]["Size"] = UDim2.new(1, 0, 1, 0)
+            Notification["b"]["Text"] = Options.Title
+            Notification["b"]["Name"] = "Title"
+        
+            -- TopBar UI Padding
+            Notification["c"] = Instance.new("UIPadding", Notification["b"])
+            Notification["c"]["PaddingLeft"] = UDim.new(0, 10)
+        
+            -- TopBar Extension
+            Notification["e"] = Instance.new("Frame", Notification["9"])
+            Notification["e"]["BorderSizePixel"] = 0
+            Notification["e"]["BackgroundColor3"] = Color3.fromRGB(25, 25, 25)
+            Notification["e"]["AnchorPoint"] = Vector2.new(0, 1)
+            Notification["e"]["Size"] = UDim2.new(1, 0, 0.25, 0)
+            Notification["e"]["Position"] = UDim2.new(0, 0, 1, 0)
+            Notification["e"]["Name"] = "Extension"
+        
+            -- Exit Button
+            Notification["10"] = Instance.new("ImageLabel", Notification["9"])
+            Notification["10"]["BorderSizePixel"] = 0
+            Notification["10"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["10"]["AnchorPoint"] = Vector2.new(1, 0)
+            Notification["10"]["Image"] = "rbxassetid://10747384394"
+            Notification["10"]["Size"] = UDim2.new(0, 20, 0, 20)
+            Notification["10"]["Position"] = UDim2.new(1, -8, 0, 5)
+            Notification["10"]["ZIndex"] = 10
+        
+            -- Description
+            Notification["11"] = Instance.new("TextLabel", Notification["3"])
+            Notification["11"]["TextWrapped"] = true
+            Notification["11"]["BorderSizePixel"] = 0
+            Notification["11"]["TextXAlignment"] = Enum.TextXAlignment.Left
+            Notification["11"]["TextYAlignment"] = Enum.TextYAlignment.Top
+            Notification["11"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["11"]["TextSize"] = 18
+            Notification["11"]["FontFace"] = Font.new("rbxassetid://11702779517", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            Notification["11"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+            Notification["11"]["BackgroundTransparency"] = 1
+            Notification["11"]["Size"] = UDim2.new(1, -20, 0.427, 0)
+            Notification["11"]["Text"] = Options.Description
+            Notification["11"]["Position"] = UDim2.new(0.5, 0, 0.44877, 0)
+        
+            -- Make it visible and animate
+            Library:Tween(Notification["12"], {Scale = 1})
+        
+            -- Destroy Function
             function Notification:Destroy()
-                -- Плавно уменьшаем масштаб уведомления перед удалением
-                Library:Tween(Scale, { Scale = 0.8 }, 0.3) -- Анимация с продолжительностью 0.3 секунды
-                task.wait(0.3) -- Ждем завершения анимации
-                Notification.Frame:Destroy()  -- Удаляем саму рамку уведомления
+                Library:Tween(Notification["12"], {Scale = 0.8})
+                wait(0.1)
+                Notification["3"]:Destroy()
             end
         
-            -- Автозакрытие уведомления через Duration (если задано)
-            task.spawn(function()
-                task.wait(Options.Duration)  -- Ждем Duration
-                if Notification.Frame.Parent then
-                    Notification:Destroy()  -- Закрываем уведомление после задержки
+            -- Button Interaction
+            Notification["10"].InputBegan:Connect(function(Input, GPE)
+                if GPE then return end
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    Notification.MouseDown = true
+                    Notification:Destroy()
                 end
             end)
         
-            return Notification  -- Возвращаем объект уведомления
+            if Options.Button == false then
+                Notification["11"].Size = UDim2.new(1, -20, 0.71, 0)
+                Notification["11"].Position = UDim2.new(0.5, 0, 0.63, 0)
+                Notification["6"].Visible = false
+            else
+                Notification["6"].Visible = true
+                Notification["6"].Text = Options.Button.Name
+        
+                -- Hover Effect
+                Notification["6"].MouseEnter:Connect(function()
+                    Notification.Hover = true
+                    Library:Tween(Notification["6"], {TextTransparency = 0})
+                    Library:Tween(Notification["8"], {Transparency = 0.9})
+                end)
+        
+                Notification["6"].MouseLeave:Connect(function()
+                    Notification.Hover = false
+                    if not Notification.MouseDown then
+                        Library:Tween(Notification["6"], {TextTransparency = 0.2})
+                        Library:Tween(Notification["8"], {Transparency = 0.96})
+                    end
+                end)
+        
+                -- Click Effect
+                Notification["6"].InputBegan:Connect(function(Input, GPE)
+                    if GPE then return end
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 and Notification.Hover then
+                        Notification.MouseDown = true
+                        Library:Tween(Notification["6"], {BackgroundColor3 = Color3.fromRGB(32, 32, 32)})
+                        Library:Tween(Notification["8"], {Transparency = 0.85})
+                        Options.Button.Callback()
+                    end
+                end)
+        
+                Notification["6"].InputEnded:Connect(function(Input, GPE)
+                    if GPE then return end
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        Notification.MouseDown = false
+                        if Notification.Hover then
+                            Library:Tween(Notification["6"], {TextTransparency = 0})
+                            Library:Tween(Notification["8"], {Transparency = 0.9})
+                        else
+                            Library:Tween(Notification["6"], {BackgroundColor3 = Color3.fromRGB(29, 29, 29)})
+                            Library:Tween(Notification["6"], {TextTransparency = 0.2})
+                            Library:Tween(Notification["8"], {Transparency = 0.96})
+                        end
+                    end
+                end)
+            end
+        
+            return Notification
         end
 
-
-        
         function Window:CreateTab(Options)
             Options = Library:Validate({
                 Name = "Tab",
