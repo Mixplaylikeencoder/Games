@@ -342,6 +342,7 @@ function Library:CreateWindow(Options)
         end)
         
         function Window:Notification(Options)
+            -- Проверяем и валидируем переданные параметры
             Options = Library:Validate({
                 Title = "Notification",
                 Description = "This is an example notification!",
@@ -353,7 +354,8 @@ function Library:CreateWindow(Options)
                 BackgroundColor = Color3.fromRGB(75, 0, 130), -- Цвет фона уведомления
                 StrokeColor = Color3.fromRGB(150, 0, 150), -- Цвет обводки уведомления
             }, Options)
-        
+            
+            -- Создаем структуру для уведомления
             local Notification = {
                 Hover = false,
                 MouseDown = false
@@ -367,7 +369,7 @@ function Library:CreateWindow(Options)
             Notification.Frame.Size = UDim2.new(0, 279, 0, 155)
             Notification.Frame.Position = UDim2.new(1, -10, 1, -10)
             Notification.Frame.Name = "Notification"
-        
+            
             -- Скругление углов
             Instance.new("UICorner", Notification.Frame)
         
@@ -386,7 +388,7 @@ function Library:CreateWindow(Options)
             TopBar.BackgroundColor3 = Options.BackgroundColor
             TopBar.Size = UDim2.new(1, 0, -0.06107, 40)
             TopBar.Name = "TopBar"
-        
+            
             local Title = Instance.new("TextLabel", TopBar)
             Title.Text = Options.Title
             Title.TextSize = 18
@@ -420,30 +422,32 @@ function Library:CreateWindow(Options)
                 Button.Size = UDim2.new(1, -20, 0, 35)
                 Button.Position = UDim2.new(0, 10, 1, -45)
                 Instance.new("UICorner", Button)
-        
+            
                 Button.MouseButton1Click:Connect(function()
                     Options.Button.Callback()
-                    Notification:Destroy()
+                    Notification:Destroy()  -- Удаляем уведомление при нажатии
                 end)
             end
         
             -- Закрытие уведомления
             function Notification:Destroy()
-                Library:Tween(Scale, { Scale = 0.8 })
-                task.wait(0.1)
-                Notification.Frame:Destroy()
+                -- Плавно уменьшаем масштаб
+                Library:Tween(Scale, { Scale = 0.8 }, 0.3) -- Анимация с продолжительностью 0.3
+                task.wait(0.3) -- Ждем окончания анимации
+                Notification.Frame:Destroy()  -- Удаляем саму рамку уведомления
             end
         
             -- Автоматическое закрытие через Duration
             task.spawn(function()
                 task.wait(Options.Duration)
                 if Notification.Frame.Parent then
-                    Notification:Destroy()
+                    Notification:Destroy()  -- Закрываем уведомление после таймаута
                 end
             end)
-        
+            
             return Notification
         end
+
         
         function Window:CreateTab(Options)
             Options = Library:Validate({
