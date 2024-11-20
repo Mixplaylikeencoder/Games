@@ -342,26 +342,26 @@ function Library:CreateWindow(Options)
         end)
         
         function Window:Notification(Options)
-            -- Проверяем и валидируем переданные параметры
+            -- Проверка и валидирование переданных параметров
             Options = Library:Validate({
-                Title = "Notification",
-                Description = "This is an example notification!",
+                Title = "Notification", -- Заголовок уведомления
+                Description = "This is an example notification!", -- Описание уведомления
                 Button = {
-                    Name = "Okay!",
-                    Callback = function() end,
+                    Name = "Okay!", -- Имя кнопки
+                    Callback = function() end, -- Обработчик кнопки
                 },
                 Duration = 5, -- Продолжительность в секундах до автозакрытия (по умолчанию)
                 BackgroundColor = Color3.fromRGB(75, 0, 130), -- Цвет фона уведомления
                 StrokeColor = Color3.fromRGB(150, 0, 150), -- Цвет обводки уведомления
             }, Options)
-            
-            -- Создаем структуру для уведомления
+        
+            -- Создаем структуру уведомления
             local Notification = {
                 Hover = false,
                 MouseDown = false
             }
         
-            -- Уведомление - основная рамка
+            -- Основная рамка уведомления
             Notification.Frame = Instance.new("Frame", Window["20"])
             Notification.Frame.BorderSizePixel = 0
             Notification.Frame.BackgroundColor3 = Options.BackgroundColor
@@ -399,7 +399,7 @@ function Library:CreateWindow(Options)
             Title.Position = UDim2.new(0, 10, 0, 0)
             Title.TextXAlignment = Enum.TextXAlignment.Left
         
-            -- Основной текст
+            -- Основной текст уведомления
             local Description = Instance.new("TextLabel", Notification.Frame)
             Description.Text = Options.Description
             Description.TextWrapped = true
@@ -411,7 +411,7 @@ function Library:CreateWindow(Options)
             Description.Position = UDim2.new(0.5, 0, 0.45, 0)
             Description.AnchorPoint = Vector2.new(0.5, 0)
         
-            -- Кнопка (если задана)
+            -- Кнопка "Okay!" (если задана)
             if Options.Button then
                 local Button = Instance.new("TextButton", Notification.Frame)
                 Button.Text = Options.Button.Name
@@ -423,30 +423,32 @@ function Library:CreateWindow(Options)
                 Button.Position = UDim2.new(0, 10, 1, -45)
                 Instance.new("UICorner", Button)
             
+                -- Обработчик нажатия на кнопку "Okay"
                 Button.MouseButton1Click:Connect(function()
-                    Options.Button.Callback()
-                    Notification:Destroy()  -- Удаляем уведомление при нажатии
+                    Options.Button.Callback()  -- Выполняем колбэк
+                    Notification:Destroy()  -- Удаляем уведомление после клика
                 end)
             end
         
             -- Закрытие уведомления
             function Notification:Destroy()
-                -- Плавно уменьшаем масштаб
-                Library:Tween(Scale, { Scale = 0.8 }, 0.3) -- Анимация с продолжительностью 0.3
-                task.wait(0.3) -- Ждем окончания анимации
+                -- Плавно уменьшаем масштаб уведомления перед удалением
+                Library:Tween(Scale, { Scale = 0.8 }, 0.3) -- Анимация с продолжительностью 0.3 секунды
+                task.wait(0.3) -- Ждем завершения анимации
                 Notification.Frame:Destroy()  -- Удаляем саму рамку уведомления
             end
         
-            -- Автоматическое закрытие через Duration
+            -- Автозакрытие уведомления через Duration (если задано)
             task.spawn(function()
-                task.wait(Options.Duration)
+                task.wait(Options.Duration)  -- Ждем Duration
                 if Notification.Frame.Parent then
-                    Notification:Destroy()  -- Закрываем уведомление после таймаута
+                    Notification:Destroy()  -- Закрываем уведомление после задержки
                 end
             end)
-            
-            return Notification
+        
+            return Notification  -- Возвращаем объект уведомления
         end
+
 
         
         function Window:CreateTab(Options)
