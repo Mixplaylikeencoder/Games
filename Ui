@@ -1530,300 +1530,646 @@ function Library:CreateWindow(Options)
                 return Toggle
             end
             
-            function Tab:CreateDropdown(Options)
-                Options = Library:Validate({
-                    Name = "Dropdown",
-                    Items = {"Item 1", "Item 2"},
-                    Default = false,
-                    Callback = function(Value) print("The Value is "..Value.."!") end
-                }, Options)
+        function Tab:CreateDropdown(Options)
+            Options = Library:Validate({
+                Name = "Dropdown",
+                Items = {"Item 1", "Item 2"},
+                Default = false,
+                Callback = function(Value) print("Selected: "..Value) end
+            }, Options)
+            
+            local Dropdown = {
+                Hover = false,
+                MouseDown = false,
+                Opened = false,
+                Selected = nil,
+                Items = {},
+            }
+            
+            -- Создание основного фрейма дропдауна
+            Dropdown["Frame"] = Instance.new("Frame", Tab["21"])
+            Dropdown["Frame"].BorderSizePixel = 0
+            Dropdown["Frame"].BackgroundColor3 = Colors.Primary
+            Dropdown["Frame"].ClipsDescendants = true
+            Dropdown["Frame"].Size = UDim2.new(1, 0, 0, 45)
+            Dropdown["Frame"].Position = UDim2.new(0, 0, 0, 0)
+            Dropdown["Frame"].BorderColor3 = Colors.Secondary
+            Dropdown["Frame"].Name = [[Dropdown]]
+
+            -- Добавление UIStroke
+            Dropdown["Stroke"] = Instance.new("UIStroke", Dropdown["Frame"])
+            Dropdown["Stroke"].Transparency = 0.96
+            Dropdown["Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            Dropdown["Stroke"].Color = Colors.Text
+
+            -- Добавление UIPadding
+            Dropdown["Padding"] = Instance.new("UIPadding", Dropdown["Frame"])
+            Dropdown["Padding"].PaddingTop = UDim.new(0, 8)
+            Dropdown["Padding"].PaddingLeft = UDim.new(0, 12)
+            Dropdown["Padding"].PaddingRight = UDim.new(0, -8)
+
+            -- Добавление UICorner
+            Dropdown["Corner"] = Instance.new("UICorner", Dropdown["Frame"])
+            Dropdown["Corner"].CornerRadius = UDim.new(0, 5)
+
+            -- Заголовок дропдауна
+            Dropdown["Title"] = Instance.new("TextLabel", Dropdown["Frame"])
+            Dropdown["Title"].BorderSizePixel = 0
+            Dropdown["Title"].TextXAlignment = Enum.TextXAlignment.Left
+            Dropdown["Title"].TextTransparency = 0.2
+            Dropdown["Title"].BackgroundColor3 = Colors.Text
+            Dropdown["Title"].TextSize = 18
+            Dropdown["Title"].FontFace = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            Dropdown["Title"].TextColor3 = Colors.Text
+            Dropdown["Title"].BackgroundTransparency = 1
+            Dropdown["Title"].Size = UDim2.new(0.85, 0, 0, 29)
+            Dropdown["Title"].Position = UDim2.new(0, 0, 0, 0)
+            Dropdown["Title"].BorderColor3 = Colors.Secondary
+            Dropdown["Title"].Text = Options.Name
+            Dropdown["Title"].Name = [[Title]]
+
+            -- Иконка стрелки
+            Dropdown["Icon"] = Instance.new("ImageLabel", Dropdown["Frame"])
+            Dropdown["Icon"].BorderSizePixel = 0
+            Dropdown["Icon"].BackgroundColor3 = Colors.Text
+            Dropdown["Icon"].ImageTransparency = 0.3
+            Dropdown["Icon"].AnchorPoint = Vector2.new(1, 0)
+            Dropdown["Icon"].Image = [[rbxassetid://18824644623]]
+            Dropdown["Icon"].ImageColor3 = Colors.Text
+            Dropdown["Icon"].Size = UDim2.new(0, 25, 0, 25)
+            Dropdown["Icon"].BorderColor3 = Colors.Secondary
+            Dropdown["Icon"].BackgroundTransparency = 1
+            Dropdown["Icon"].Name = [[Icon]]
+            Dropdown["Icon"].Position = UDim2.new(1, -8, 0, 2)
+
+            -- Контейнер для опций
+            Dropdown["OptionsContainer"] = Instance.new("Frame", Dropdown["Frame"])
+            Dropdown["OptionsContainer"].Visible = false
+            Dropdown["OptionsContainer"].BorderSizePixel = 0
+            Dropdown["OptionsContainer"].BackgroundColor3 = Colors.DropdownBackground
+            Dropdown["OptionsContainer"].Size = UDim2.new(1, -12, 1, -36)
+            Dropdown["OptionsContainer"].Position = UDim2.new(0, 0, 0, 32)
+            Dropdown["OptionsContainer"].BorderColor3 = Colors.Secondary
+            Dropdown["OptionsContainer"].Name = [[Options]]
+            Dropdown["OptionsContainer"].BackgroundTransparency = 1
+
+            -- UIPadding внутри контейнера опций
+            Dropdown["OptionsPadding"] = Instance.new("UIPadding", Dropdown["OptionsContainer"])
+            Dropdown["OptionsPadding"].PaddingTop = UDim.new(0, 2)
+            Dropdown["OptionsPadding"].PaddingLeft = UDim.new(0, 2)
+            Dropdown["OptionsPadding"].PaddingRight = UDim.new(0, -8)
+
+            -- UIListLayout для опций
+            Dropdown["OptionsLayout"] = Instance.new("UIListLayout", Dropdown["OptionsContainer"])
+            Dropdown["OptionsLayout"].Padding = UDim.new(0, 5)
+            Dropdown["OptionsLayout"].SortOrder = Enum.SortOrder.LayoutOrder
+
+            -- Функция добавления опции
+            function Dropdown:AddItem(Value)
+                local ID = HTTPService:GenerateGUID(false)
                 
-                local Dropdown = {
-                    Hover = false,
-                    MouseDown = false,
-                    Opened = false,
-                    Selected = nil,
-                    Items = {},
+                if Dropdown.Items[ID] ~= nil then
+                    return
+                end
+                
+                Dropdown.Items[ID] = {
+                    Instance = {},
+                    Value = Value
                 }
                 
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown
-                Dropdown["47"] = Instance.new("Frame", Tab["21"]);
-                Dropdown["47"]["BorderSizePixel"] = 0;
-                Dropdown["47"]["BackgroundColor3"] = Color3.fromRGB(25, 25, 25);
-                Dropdown["47"]["ClipsDescendants"] = true;
-                Dropdown["47"]["Size"] = UDim2.new(1, 0, 0, 45);
-                Dropdown["47"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-                Dropdown["47"]["Name"] = [[Dropdown]];
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.UIStroke
-                Dropdown["48"] = Instance.new("UIStroke", Dropdown["47"]);
-                Dropdown["48"]["Transparency"] = 0.96;
-                Dropdown["48"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-                Dropdown["48"]["Color"] = Color3.fromRGB(255, 255, 255);
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.UIPadding
-                Dropdown["49"] = Instance.new("UIPadding", Dropdown["47"]);
-                Dropdown["49"]["PaddingTop"] = UDim.new(0, 8);
-                Dropdown["49"]["PaddingLeft"] = UDim.new(0, 12);
-                Dropdown["49"]["PaddingBottom"] = UDim.new(0, 8);
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.UICorner
-                Dropdown["4a"] = Instance.new("UICorner", Dropdown["47"]);
-                Dropdown["4a"]["CornerRadius"] = UDim.new(0, 5);
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Icon
-                Dropdown["4b"] = Instance.new("ImageLabel", Dropdown["47"]);
-                Dropdown["4b"]["BorderSizePixel"] = 0;
-                Dropdown["4b"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-                Dropdown["4b"]["ImageTransparency"] = 0.3;
-                Dropdown["4b"]["AnchorPoint"] = Vector2.new(1, 0);
-                Dropdown["4b"]["Image"] = [[rbxassetid://18824644623]];
-                Dropdown["4b"]["Size"] = UDim2.new(0, 25, 0, 25);
-                Dropdown["4b"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-                Dropdown["4b"]["BackgroundTransparency"] = 1;
-                Dropdown["4b"]["Name"] = [[Icon]];
-                Dropdown["4b"]["Position"] = UDim2.new(1, -8, 0, 2);
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Title
-                Dropdown["4c"] = Instance.new("TextLabel", Dropdown["47"]);
-                Dropdown["4c"]["BorderSizePixel"] = 0;
-                Dropdown["4c"]["TextXAlignment"] = Enum.TextXAlignment.Left;
-                Dropdown["4c"]["TextTransparency"] = 0.2;
-                Dropdown["4c"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-                Dropdown["4c"]["TextSize"] = 18;
-                Dropdown["4c"]["FontFace"] = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-                Dropdown["4c"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-                Dropdown["4c"]["BackgroundTransparency"] = 1;
-                Dropdown["4c"]["Size"] = UDim2.new(0.85, 0, 0, 29);
-                Dropdown["4c"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-                Dropdown["4c"]["Text"] = Options.Name;
-                Dropdown["4c"]["Name"] = [[Title]];
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options
-                Dropdown["59"] = Instance.new("Frame", Dropdown["47"]);
-                Dropdown["59"]["Visible"] = false;
-                Dropdown["59"]["BorderSizePixel"] = 0;
-                Dropdown["59"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
-                Dropdown["59"]["Size"] = UDim2.new(1, -12, 1, -36);
-                Dropdown["59"]["Position"] = UDim2.new(0, 0, 0, 32);
-                Dropdown["59"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-                Dropdown["59"]["Name"] = [[Options]];
-                Dropdown["59"]["BackgroundTransparency"] = 1;
+                -- Создание опции
+                Dropdown.Items[ID].Instance["Option"] = Instance.new("TextLabel", Dropdown["OptionsContainer"])
+                Dropdown.Items[ID].Instance["Option"].BorderSizePixel = 0
+                Dropdown.Items[ID].Instance["Option"].TextTransparency = 0.24
+                Dropdown.Items[ID].Instance["Option"].BackgroundColor3 = Colors.Primary
+                Dropdown.Items[ID].Instance["Option"].TextSize = 14
+                Dropdown.Items[ID].Instance["Option"].FontFace = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                Dropdown.Items[ID].Instance["Option"].TextColor3 = Colors.Text
+                Dropdown.Items[ID].Instance["Option"].Size = UDim2.new(1, -10, 0, 20)
+                Dropdown.Items[ID].Instance["Option"].Position = UDim2.new(0, 0, 0, 0)
+                Dropdown.Items[ID].Instance["Option"].BorderColor3 = Colors.Secondary
+                Dropdown.Items[ID].Instance["Option"].Text = Value
+                Dropdown.Items[ID].Instance["Option"].Name = [[Option]]
+
+                -- Добавление UICorner к опции
+                Dropdown.Items[ID].Instance["Corner"] = Instance.new("UICorner", Dropdown.Items[ID].Instance["Option"])
+                Dropdown.Items[ID].Instance["Corner"].CornerRadius = UDim.new(0, 5)
+
+                -- Добавление UIStroke к опции
+                Dropdown.Items[ID].Instance["Stroke"] = Instance.new("UIStroke", Dropdown.Items[ID].Instance["Option"])
+                Dropdown.Items[ID].Instance["Stroke"].Enabled = false
+                Dropdown.Items[ID].Instance["Stroke"].Transparency = 0.96
+                Dropdown.Items[ID].Instance["Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                Dropdown.Items[ID].Instance["Stroke"].Color = Colors.Text
                 
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options.UIPadding
-                Dropdown["5a"] = Instance.new("UIPadding", Dropdown["59"]);
-                Dropdown["5a"]["PaddingTop"] = UDim.new(0, 2);
-                Dropdown["5a"]["PaddingLeft"] = UDim.new(0, 2);
-                Dropdown["5a"]["PaddingRight"] = UDim.new(0, -8);
-    
-                -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options.UIListLayout
-                Dropdown["64"] = Instance.new("UIListLayout", Dropdown["59"]);
-                Dropdown["64"]["Padding"] = UDim.new(0, 5);
-                Dropdown["64"]["SortOrder"] = Enum.SortOrder.LayoutOrder;
+                -- Установка выбранной опции по умолчанию, если указано
+                if Options.Default ~= false and Options.Default == Value then
+                    Dropdown.Selected = ID
+                    Dropdown["Title"].Text = Options.Name.." ("..Value..")"
+                    Dropdown.Items[ID].Instance["Option"].TextTransparency = 0.2
+                    Dropdown.Items[ID].Instance["Option"].BackgroundColor3 = Colors.Active
+                    Dropdown.Items[ID].Instance["Stroke"].Enabled = true
+                end
                 
-                function Dropdown:AddItem(Value)
-                    local ID = HTTPService:GenerateGUID(false)
+                -- Обработка событий наведения на опцию
+                Dropdown.Items[ID].Instance["Option"].MouseEnter:Connect(function()
+                    Dropdown.Hover = true
+                    Library:Tween(Dropdown.Items[ID].Instance["Option"], {TextTransparency = 0.2})
+                end)
+
+                Dropdown.Items[ID].Instance["Option"].MouseLeave:Connect(function()
+                    Dropdown.Hover = false
+
+                    if not Dropdown.MouseDown then
+                        Library:Tween(Dropdown.Items[ID].Instance["Option"], {TextTransparency = 0.24})
+                    end
+                end)
+
+                -- Обработка выбора опции
+                Dropdown.Items[ID].Instance["Option"].InputBegan:Connect(function(Input_, GPE)
+                    if GPE then return end
+
+                    if Input_.UserInputType == Enum.UserInputType.MouseButton1 and Dropdown.Hover then
+                        Dropdown.MouseDown = true
+                        
+                        if Dropdown.Selected ~= nil then
+                            Dropdown.Items[Dropdown.Selected].Instance["Option"].TextTransparency = 0.24
+                            Dropdown.Items[Dropdown.Selected].Instance["Option"].BackgroundColor3 = Colors.Primary
+                            Dropdown.Items[Dropdown.Selected].Instance["Stroke"].Enabled = false
+                        end
+                        
+                        Dropdown.Selected = ID
+                        Dropdown.Items[ID].Instance["Option"].TextTransparency = 0.2
+                        Dropdown.Items[ID].Instance["Option"].BackgroundColor3 = Colors.Active
+                        Dropdown.Items[ID].Instance["Stroke"].Enabled = true
+                        Dropdown["Title"].Text = Options.Name.." ("..Value..")"
+                        Dropdown:_Toggle()
+                        Options.Callback(Value)
+                    end
+                end)
+
+                Dropdown.Items[ID].Instance["Option"].InputEnded:Connect(function(Input_, GPE)
+                    if GPE then return end
+
+                    if Input_.UserInputType == Enum.UserInputType.MouseButton1 then
+                        Dropdown.MouseDown = false
+                        Dropdown:_Toggle()
+                        
+                        if Dropdown.Hover then
+                            Library:Tween(Dropdown.Items[ID].Instance["Option"], {TextTransparency = 0.2})
+                        else
+                            Library:Tween(Dropdown.Items[ID].Instance["Option"], {TextTransparency = 0.24})
+                        end
+                    end
+                end)
+            end
+            
+            -- Функция удаления опции по значению
+            function Dropdown:RemoveItem(Value)
+                local ID = nil
+                local Data = nil
+                
+                for Index, Item in pairs(Dropdown.Items) do
+                    if Item.Value == Value then
+                        ID = Index
+                        Data = Item
+                        break
+                    end
+                end
+
+                if ID and Data then
+                    Data.Instance["Option"]:Destroy()
+                    Dropdown.Items[ID] = nil
+                end
+            end
+
+            -- Функция очистки всех опций
+            function Dropdown:ClearItems()
+                for Index, Item in pairs(Dropdown.Items) do
+                    Dropdown:RemoveItem(Item.Value)
+                end
+            end
+
+            -- Функция изменения названия дропдауна
+            function Dropdown:SetName(Name)
+                if Dropdown.Selected ~= nil then
+                    local SelectedValue = Dropdown.Items[Dropdown.Selected].Value
+                    Dropdown["Title"].Text = Name.." ("..SelectedValue..")"
+                else
+                    Dropdown["Title"].Text = Name
+                end
+            end
+
+            -- Функция изменения колбэка
+            function Dropdown:SetCallback(Callback)
+                Options.Callback = Callback
+            end
+
+            -- Функция переключения состояния дропдауна
+            function Dropdown:_Toggle()
+                if Dropdown.Opened then
+                    Dropdown.Opened = false
+                    Dropdown["OptionsContainer"].Visible = false
+                    Library:Tween(Dropdown["Frame"], {Size = UDim2.new(1, 0, 0, 45)})
+                else
+                    Dropdown.Opened = true
+                    local Count = 0
                     
-                    if Dropdown.Items[ID] ~= nil then
+                    for Index, Item in pairs(Dropdown.Items) do
+                        if Item ~= nil then
+                            Count += 1
+                        end
+                    end
+                    
+                    if Count == 0 then
                         return
                     end
                     
-                    Dropdown.Items[ID] = {
-                        Instance = {},
-                        Value = Value
-                    }
-                    
-                    -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options.InactiveOption
-                    Dropdown.Items[ID].Instance["61"] = Instance.new("TextLabel", Dropdown["59"]);
-                    Dropdown.Items[ID].Instance["61"]["BorderSizePixel"] = 0;
-                    Dropdown.Items[ID].Instance["61"]["TextTransparency"] = 0.24;
-                    Dropdown.Items[ID].Instance["61"]["BackgroundColor3"] = Color3.fromRGB(27, 27, 27);
-                    Dropdown.Items[ID].Instance["61"]["TextSize"] = 14;
-                    Dropdown.Items[ID].Instance["61"]["FontFace"] = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-                    Dropdown.Items[ID].Instance["61"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-                    Dropdown.Items[ID].Instance["61"]["Size"] = UDim2.new(1, -10, 0, 20);
-                    Dropdown.Items[ID].Instance["61"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-                    Dropdown.Items[ID].Instance["61"]["Text"] = Value;
-                    Dropdown.Items[ID].Instance["61"]["Name"] = [[Option]];
-    
-                    -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options.InactiveOption.UICorner
-                    Dropdown.Items[ID].Instance["62"] = Instance.new("UICorner", Dropdown.Items[ID].Instance["61"]);
-                    Dropdown.Items[ID].Instance["62"]["CornerRadius"] = UDim.new(0, 5);
-    
-                    -- StarterGui.Emperion.Main.ContentContainer.Home.Dropdown.Options.InactiveOption.UIStroke
-                    Dropdown.Items[ID].Instance["63"] = Instance.new("UIStroke", Dropdown.Items[ID].Instance["61"]);
-                    Dropdown.Items[ID].Instance["63"]["Enabled"] = false;
-                    Dropdown.Items[ID].Instance["63"]["Transparency"] = 0.96;
-                    Dropdown.Items[ID].Instance["63"]["ApplyStrokeMode"] = Enum.ApplyStrokeMode.Border;
-                    Dropdown.Items[ID].Instance["63"]["Color"] = Color3.fromRGB(255, 255, 255);
-                    
-                    if Options.Default ~= false and Options.Default == Value then
-                        Dropdown.Selected = ID
-                        Dropdown["4c"]["Text"] = Options.Name.." ("..Value..")"
-                        Dropdown.Items[ID].Instance["61"]["TextTransparency"] = 0.2;
-                        Dropdown.Items[ID].Instance["61"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-                        Dropdown.Items[ID].Instance["63"]["Enabled"] = true
-                    end
-                    
-                    Dropdown.Items[ID].Instance["61"].MouseEnter:Connect(function()
-                        Dropdown.Hover = true
-                        Library:Tween(Dropdown.Items[ID].Instance["61"], {TextTransparency = 0.2})
-                    end)
-    
-                    Dropdown.Items[ID].Instance["61"].MouseLeave:Connect(function()
-                        Dropdown.Hover = false
-    
-                        if not Dropdown.MouseDown then
-                            Library:Tween(Dropdown.Items[ID].Instance["61"], {TextTransparency = 0.24})
-                        end
-                    end)
-    
-                    Dropdown.Items[ID].Instance["61"].InputBegan:Connect(function(Input, GPE)
-                        if GPE then return end
-    
-                        if Input.UserInputType == Enum.UserInputType.MouseButton1 and Dropdown.Hover then
-                            Dropdown.MouseDown = true
-                            
-                            if Dropdown.Selected ~= nil then
-                                Dropdown.Items[Dropdown.Selected].Instance["61"]["TextTransparency"] = 0.24;
-                                Dropdown.Items[Dropdown.Selected].Instance["61"]["BackgroundColor3"] = Color3.fromRGB(27, 27, 27);
-                                Dropdown.Items[Dropdown.Selected].Instance["63"]["Enabled"] = false
-                            end
-                            
-                            Dropdown.Selected = ID
-                            Dropdown.Items[ID].Instance["61"]["TextTransparency"] = 0.2;
-                            Dropdown.Items[ID].Instance["61"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-                            Dropdown.Items[ID].Instance["63"]["Enabled"] = true
-                            Dropdown["4c"]["Text"] = Options.Name.." ("..Value..")"
-                            Dropdown:_Toggle()
-                            Options.Callback(Value)
-                        end
-                    end)
-    
-                    Dropdown.Items[ID].Instance["61"].InputEnded:Connect(function(Input, GPE)
-                        if GPE then return end
-    
-                        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                            Dropdown.MouseDown = false
-                            Dropdown:_Toggle()
-                            
-                            if Dropdown.Hover then
-                                Library:Tween(Dropdown.Items[ID].Instance["61"], {TextTransparency = 0.2})
-                            else
-                                Library:Tween(Dropdown.Items[ID].Instance["61"], {TextTransparency = 0.24})
-                            end
-                        end
-                    end)
+                    Dropdown["OptionsContainer"].Visible = true
+                    Library:Tween(Dropdown["Frame"], {Size = UDim2.new(1, 0, 0, (45 + (20 * Count) + 14))})
                 end
-                
-                function Dropdown:RemoveItem(Value)
-                    local ID = nil
-                    local Data = nil
-                    
-                    for Index, Item in pairs(Dropdown.Items) do
-                        if Item.Value == Value then
-                            ID = Index
-                            Data = Item
-                            break
-                        end
-                    end
-    
-                    if ID and Data then
-                        Data.Instance["61"]:Destroy()
-                        Dropdown.Items[ID] = nil
-                    end
-                end
-                
-                function Dropdown:ClearItems(Items)
-                    for Index, Item in pairs(Dropdown.Items) do
-                        Dropdown:RemoveItem(Item.Value)
-                    end
-                end
-                
-                function Dropdown:SetName(Name)
-                    Dropdown["4c"]["Text"] = Name
-                end
-                
-                function Dropdown:SetCallback(Callback)
-                    Options.Callback = Callback
-                end
-                
-                function Dropdown:_Toggle()
-                    if Dropdown.Opened then
-                        Dropdown.Opened = false
-                        Dropdown["59"].Visible = false
-                        Library:Tween(Dropdown["47"], {Size = UDim2.new(1, 0, 0, 45)})
-                    else
-                        Dropdown.Opened = true
-                        local Count = 0
-                        
-                        for Index, Item in pairs(Dropdown.Items) do
-                            if Item ~= nil then
-                                Count += 1
-                            end
-                        end
-                        
-                        if Count == 0 then
-                            return
-                        end
-                        
-                        Dropdown["59"].Visible = true
-                        Library:Tween(Dropdown["47"], {Size = UDim2.new(1, 0, 0, (45 + (20 * Count) + 14))})
-                    end
-                end
-                
-                for _, Value in pairs(Options.Items) do
-                    Dropdown:AddItem(Value)
-                end
-                
-                Dropdown["47"].MouseEnter:Connect(function()
-                    Dropdown.Hover = true
-                    Library:Tween(Dropdown["4b"], {ImageTransparency = 0})
-                    Library:Tween(Dropdown["4c"], {TextTransparency = 0})
-                    Library:Tween(Dropdown["48"], {Transparency = 0.9})
-                end)
-    
-                Dropdown["47"].MouseLeave:Connect(function()
-                    Dropdown.Hover = false
-    
-                    if not Dropdown.MouseDown then
-                        Library:Tween(Dropdown["4b"], {ImageTransparency = 0.3})
-                        Library:Tween(Dropdown["4c"], {TextTransparency = 0.2})
-                        Library:Tween(Dropdown["48"], {Transparency = 0.96})
-                    end
-                end)
-    
-                Dropdown["47"].InputBegan:Connect(function(Input, GPE)
-                    if GPE then return end
-    
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 and Dropdown.Hover then
-                        Dropdown.MouseDown = true
-                        Library:Tween(Dropdown["47"], {BackgroundColor3 = Color3.fromRGB(28, 28, 28)})
-                        Library:Tween(Dropdown["48"], {Transparency = 0.9})
-                        Dropdown:_Toggle()
-                    end
-                end)
-    
-                Dropdown["47"].InputEnded:Connect(function(Input, GPE)
-                    if GPE then return end
-    
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        Dropdown.MouseDown = false
-    
-                        if Dropdown.Hover then
-                            Library:Tween(Dropdown["47"], {BackgroundColor3 = Color3.fromRGB(25, 25, 25)})
-                            Library:Tween(Dropdown["4b"], {ImageTransparency = 0})
-                            Library:Tween(Dropdown["4c"], {TextTransparency = 0})
-                            Library:Tween(Dropdown["48"], {Transparency = 0.9})
-                        else
-                            Library:Tween(Dropdown["47"], {BackgroundColor3 = Color3.fromRGB(25, 25, 25)})
-                            Library:Tween(Dropdown["48"], {Transparency = 0.96})
-                        end
-                    end
-                end)
-                
-                return Dropdown
             end
+            
+            -- Добавление всех опций
+            for _, Value in pairs(Options.Items) do
+                Dropdown:AddItem(Value)
+            end
+
+            -- Обработка событий наведения и клика на основной фрейм дропдауна
+            Dropdown["Frame"].MouseEnter:Connect(function()
+                Dropdown.Hover = true
+                Library:Tween(Dropdown["Icon"], {ImageTransparency = 0})
+                Library:Tween(Dropdown["Title"], {TextTransparency = 0})
+                Library:Tween(Dropdown["Stroke"], {Transparency = 0.9})
+            end)
+
+            Dropdown["Frame"].MouseLeave:Connect(function()
+                Dropdown.Hover = false
+
+                if not Dropdown.MouseDown then
+                    Library:Tween(Dropdown["Icon"], {ImageTransparency = 0.3})
+                    Library:Tween(Dropdown["Title"], {TextTransparency = 0.2})
+                    Library:Tween(Dropdown["Stroke"], {Transparency = 0.96})
+                end
+            end)
+
+            Dropdown["Frame"].InputBegan:Connect(function(Input_, GPE)
+                if GPE then return end
+
+                if Input_.UserInputType == Enum.UserInputType.MouseButton1 and Dropdown.Hover then
+                    Dropdown.MouseDown = true
+                    Library:Tween(Dropdown["Frame"], {BackgroundColor3 = Colors.Hover})
+                    Library:Tween(Dropdown["Stroke"], {Transparency = 0.9})
+                    Dropdown:_Toggle()
+                end
+            end)
+
+            Dropdown["Frame"].InputEnded:Connect(function(Input_, GPE)
+                if GPE then return end
+
+                if Input_.UserInputType == Enum.UserInputType.MouseButton1 then
+                    Dropdown.MouseDown = false
+
+                    if Dropdown.Hover then
+                        Library:Tween(Dropdown["Frame"], {BackgroundColor3 = Colors.Primary})
+                        Library:Tween(Dropdown["Icon"], {ImageTransparency = 0})
+                        Library:Tween(Dropdown["Title"], {TextTransparency = 0})
+                        Library:Tween(Dropdown["Stroke"], {Transparency = 0.9})
+                    else
+                        Library:Tween(Dropdown["Frame"], {BackgroundColor3 = Colors.Primary})
+                        Library:Tween(Dropdown["Stroke"], {Transparency = 0.96})
+                    end
+                end
+            end)
+            
+            return Dropdown
+        end
+
+        -- Новая функция CreateMultiDropdown
+        function Tab:CreateMultiDropdown(Options)
+            Options = Library:Validate({
+                Name = "MultiDropdown",
+                Items = {"Item 1", "Item 2", "Item 3"},
+                Defaults = {}, -- Таблица с выбранными значениями по умолчанию
+                Callback = function(SelectedValues) print("Selected: ", table.concat(SelectedValues, ", ")) end
+            }, Options)
+            
+            local MultiDropdown = {
+                Hover = false,
+                MouseDown = false,
+                Opened = false,
+                Selected = {}, -- Таблица с выбранными значениями
+                Items = {},
+            }
+            
+            -- Создание основного фрейма многовыборного дропдауна
+            MultiDropdown["Frame"] = Instance.new("Frame", Tab["21"])
+            MultiDropdown["Frame"].BorderSizePixel = 0
+            MultiDropdown["Frame"].BackgroundColor3 = Colors.Primary
+            MultiDropdown["Frame"].ClipsDescendants = true
+            MultiDropdown["Frame"].Size = UDim2.new(1, 0, 0, 45)
+            MultiDropdown["Frame"].Position = UDim2.new(0, 0, 0, 0)
+            MultiDropdown["Frame"].BorderColor3 = Colors.Secondary
+            MultiDropdown["Frame"].Name = [[MultiDropdown]]
+
+            -- Добавление UIStroke
+            MultiDropdown["Stroke"] = Instance.new("UIStroke", MultiDropdown["Frame"])
+            MultiDropdown["Stroke"].Transparency = 0.96
+            MultiDropdown["Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            MultiDropdown["Stroke"].Color = Colors.Text
+
+            -- Добавление UIPadding
+            MultiDropdown["Padding"] = Instance.new("UIPadding", MultiDropdown["Frame"])
+            MultiDropdown["Padding"].PaddingTop = UDim.new(0, 8)
+            MultiDropdown["Padding"].PaddingLeft = UDim.new(0, 12)
+            MultiDropdown["Padding"].PaddingRight = UDim.new(0, -8)
+
+            -- Добавление UICorner
+            MultiDropdown["Corner"] = Instance.new("UICorner", MultiDropdown["Frame"])
+            MultiDropdown["Corner"].CornerRadius = UDim.new(0, 5)
+
+            -- Заголовок многовыборного дропдауна
+            MultiDropdown["Title"] = Instance.new("TextLabel", MultiDropdown["Frame"])
+            MultiDropdown["Title"].BorderSizePixel = 0
+            MultiDropdown["Title"].TextXAlignment = Enum.TextXAlignment.Left
+            MultiDropdown["Title"].TextTransparency = 0.2
+            MultiDropdown["Title"].BackgroundColor3 = Colors.Text
+            MultiDropdown["Title"].TextSize = 18
+            MultiDropdown["Title"].FontFace = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+            MultiDropdown["Title"].TextColor3 = Colors.Text
+            MultiDropdown["Title"].BackgroundTransparency = 1
+            MultiDropdown["Title"].Size = UDim2.new(0.85, 0, 0, 29)
+            MultiDropdown["Title"].Position = UDim2.new(0, 0, 0, 0)
+            MultiDropdown["Title"].BorderColor3 = Colors.Secondary
+            MultiDropdown["Title"].Text = Options.Name
+            MultiDropdown["Title"].Name = [[Title]]
+
+            -- Иконка стрелки
+            MultiDropdown["Icon"] = Instance.new("ImageLabel", MultiDropdown["Frame"])
+            MultiDropdown["Icon"].BorderSizePixel = 0
+            MultiDropdown["Icon"].BackgroundColor3 = Colors.Text
+            MultiDropdown["Icon"].ImageTransparency = 0.3
+            MultiDropdown["Icon"].AnchorPoint = Vector2.new(1, 0)
+            MultiDropdown["Icon"].Image = [[rbxassetid://18824644623]]
+            MultiDropdown["Icon"].ImageColor3 = Colors.Text
+            MultiDropdown["Icon"].Size = UDim2.new(0, 25, 0, 25)
+            MultiDropdown["Icon"].BorderColor3 = Colors.Secondary
+            MultiDropdown["Icon"].BackgroundTransparency = 1
+            MultiDropdown["Icon"].Name = [[Icon]]
+            MultiDropdown["Icon"].Position = UDim2.new(1, -8, 0, 2)
+
+            -- Контейнер для опций
+            MultiDropdown["OptionsContainer"] = Instance.new("Frame", MultiDropdown["Frame"])
+            MultiDropdown["OptionsContainer"].Visible = false
+            MultiDropdown["OptionsContainer"].BorderSizePixel = 0
+            MultiDropdown["OptionsContainer"].BackgroundColor3 = Colors.MultiDropdownBackground
+            MultiDropdown["OptionsContainer"].Size = UDim2.new(1, -12, 1, -36)
+            MultiDropdown["OptionsContainer"].Position = UDim2.new(0, 0, 0, 32)
+            MultiDropdown["OptionsContainer"].BorderColor3 = Colors.Secondary
+            MultiDropdown["OptionsContainer"].Name = [[Options]]
+            MultiDropdown["OptionsContainer"].BackgroundTransparency = 1
+
+            -- UIPadding внутри контейнера опций
+            MultiDropdown["OptionsPadding"] = Instance.new("UIPadding", MultiDropdown["OptionsContainer"])
+            MultiDropdown["OptionsPadding"].PaddingTop = UDim.new(0, 2)
+            MultiDropdown["OptionsPadding"].PaddingLeft = UDim.new(0, 2)
+            MultiDropdown["OptionsPadding"].PaddingRight = UDim.new(0, -8)
+
+            -- UIListLayout для опций
+            MultiDropdown["OptionsLayout"] = Instance.new("UIListLayout", MultiDropdown["OptionsContainer"])
+            MultiDropdown["OptionsLayout"].Padding = UDim.new(0, 5)
+            MultiDropdown["OptionsLayout"].SortOrder = Enum.SortOrder.LayoutOrder
+
+            -- Таблица для хранения выбранных элементов
+            MultiDropdown.SelectedValues = {}
+
+            -- Функция добавления опции
+            function MultiDropdown:AddItem(Value)
+                local ID = HTTPService:GenerateGUID(false)
+                
+                if MultiDropdown.Items[ID] ~= nil then
+                    return
+                end
+                
+                MultiDropdown.Items[ID] = {
+                    Instance = {},
+                    Value = Value,
+                    Selected = false,
+                }
+                
+                -- Создание опции
+                MultiDropdown.Items[ID].Instance["Option"] = Instance.new("TextLabel", MultiDropdown["OptionsContainer"])
+                MultiDropdown.Items[ID].Instance["Option"].BorderSizePixel = 0
+                MultiDropdown.Items[ID].Instance["Option"].TextTransparency = 0.24
+                MultiDropdown.Items[ID].Instance["Option"].BackgroundColor3 = Colors.Primary
+                MultiDropdown.Items[ID].Instance["Option"].TextSize = 14
+                MultiDropdown.Items[ID].Instance["Option"].FontFace = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                MultiDropdown.Items[ID].Instance["Option"].TextColor3 = Colors.Text
+                MultiDropdown.Items[ID].Instance["Option"].Size = UDim2.new(1, -10, 0, 20)
+                MultiDropdown.Items[ID].Instance["Option"].Position = UDim2.new(0, 0, 0, 0)
+                MultiDropdown.Items[ID].Instance["Option"].BorderColor3 = Colors.Secondary
+                MultiDropdown.Items[ID].Instance["Option"].Text = Value
+                MultiDropdown.Items[ID].Instance["Option"].Name = [[Option]]
+
+                -- Добавление UICorner к опции
+                MultiDropdown.Items[ID].Instance["Corner"] = Instance.new("UICorner", MultiDropdown.Items[ID].Instance["Option"])
+                MultiDropdown.Items[ID].Instance["Corner"].CornerRadius = UDim.new(0, 5)
+
+                -- Добавление UIStroke к опции
+                MultiDropdown.Items[ID].Instance["Stroke"] = Instance.new("UIStroke", MultiDropdown.Items[ID].Instance["Option"])
+                MultiDropdown.Items[ID].Instance["Stroke"].Enabled = false
+                MultiDropdown.Items[ID].Instance["Stroke"].Transparency = 0.96
+                MultiDropdown.Items[ID].Instance["Stroke"].ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                MultiDropdown.Items[ID].Instance["Stroke"].Color = Colors.Text
+
+                -- Создание чекбокса для многовыборного дропдауна
+                MultiDropdown.Items[ID].Instance["Checkbox"] = Instance.new("ImageLabel", MultiDropdown.Items[ID].Instance["Option"])
+                MultiDropdown.Items[ID].Instance["Checkbox"].BorderSizePixel = 0
+                MultiDropdown.Items[ID].Instance["Checkbox"].BackgroundColor3 = Colors.ToggleInactive
+                MultiDropdown.Items[ID].Instance["Checkbox"].Image = [[rbxassetid://18837414354]] -- Иконка галочки
+                MultiDropdown.Items[ID].Instance["Checkbox"].ImageTransparency = 1
+                MultiDropdown.Items[ID].Instance["Checkbox"].AnchorPoint = Vector2.new(1, 0.5)
+                MultiDropdown.Items[ID].Instance["Checkbox"].Size = UDim2.new(0, 20, 0, 20)
+                MultiDropdown.Items[ID].Instance["Checkbox"].Position = UDim2.new(1, -8, 0.5, 0)
+                MultiDropdown.Items[ID].Instance["Checkbox"].BorderColor3 = Colors.Secondary
+                MultiDropdown.Items[ID].Instance["Checkbox"].BackgroundTransparency = 1
+                MultiDropdown.Items[ID].Instance["Checkbox"].Name = [[Checkbox]]
+
+                -- Функция обновления состояния чекбокса
+                local function UpdateCheckbox()
+                    if MultiDropdown.Items[ID].Selected then
+                        MultiDropdown.Items[ID].Instance["Checkbox"].ImageTransparency = 0
+                        MultiDropdown.Items[ID].Instance["Checkbox"].BackgroundColor3 = Colors.ToggleActive
+                    else
+                        MultiDropdown.Items[ID].Instance["Checkbox"].ImageTransparency = 1
+                        MultiDropdown.Items[ID].Instance["Checkbox"].BackgroundColor3 = Colors.ToggleInactive
+                    end
+                end
+
+                -- Установка выбранных значений по умолчанию
+                for _, defaultValue in ipairs(Options.Defaults) do
+                    if defaultValue == Value then
+                        MultiDropdown.Items[ID].Selected = true
+                        table.insert(MultiDropdown.SelectedValues, Value)
+                        break
+                    end
+                end
+                UpdateCheckbox()
+
+                -- Обработка событий наведения на опцию
+                MultiDropdown.Items[ID].Instance["Option"].MouseEnter:Connect(function()
+                    MultiDropdown.Hover = true
+                    Library:Tween(MultiDropdown.Items[ID].Instance["Option"], {TextTransparency = 0.2})
+                end)
+
+                MultiDropdown.Items[ID].Instance["Option"].MouseLeave:Connect(function()
+                    MultiDropdown.Hover = false
+
+                    if not MultiDropdown.MouseDown then
+                        Library:Tween(MultiDropdown.Items[ID].Instance["Option"], {TextTransparency = 0.24})
+                    end
+                end)
+
+                -- Обработка клика на опцию
+                MultiDropdown.Items[ID].Instance["Option"].InputBegan:Connect(function(Input_, GPE)
+                    if GPE then return end
+
+                    if Input_.UserInputType == Enum.UserInputType.MouseButton1 and MultiDropdown.Hover then
+                        MultiDropdown.MouseDown = true
+                        MultiDropdown.Items[ID].Selected = not MultiDropdown.Items[ID].Selected
+                        
+                        if MultiDropdown.Items[ID].Selected then
+                            table.insert(MultiDropdown.SelectedValues, Value)
+                        else
+                            for i, v in ipairs(MultiDropdown.SelectedValues) do
+                                if v == Value then
+                                    table.remove(MultiDropdown.SelectedValues, i)
+                                    break
+                                end
+                            end
+                        end
+
+                        UpdateCheckbox()
+                        MultiDropdown["Title"].Text = Options.Name.." ("..#MultiDropdown.SelectedValues..")"
+                        Options.Callback(MultiDropdown.SelectedValues)
+                    end
+                end)
+
+                MultiDropdown.Items[ID].Instance["Option"].InputEnded:Connect(function(Input_, GPE)
+                    if GPE then return end
+
+                    if Input_.UserInputType == Enum.UserInputType.MouseButton1 then
+                        MultiDropdown.MouseDown = false
+                        MultiDropdown:_Toggle()
+                        
+                        if MultiDropdown.Hover then
+                            Library:Tween(MultiDropdown.Items[ID].Instance["Option"], {TextTransparency = 0.2})
+                        else
+                            Library:Tween(MultiDropdown.Items[ID].Instance["Option"], {TextTransparency = 0.24})
+                        end
+                    end
+                end)
+            end
+            
+            -- Функция очистки всех опций
+            function MultiDropdown:ClearItems()
+                for Index, Item in pairs(MultiDropdown.Items) do
+                    Item.Instance["Option"]:Destroy()
+                    MultiDropdown.Items[Index] = nil
+                end
+                MultiDropdown.SelectedValues = {}
+                MultiDropdown["Title"].Text = Options.Name
+            end
+
+            -- Функция изменения названия многовыборного дропдауна
+            function MultiDropdown:SetName(Name)
+                MultiDropdown["Title"].Text = Name.." ("..#MultiDropdown.SelectedValues..")"
+            end
+
+            -- Функция изменения колбэка
+            function MultiDropdown:SetCallback(Callback)
+                Options.Callback = Callback
+            end
+
+            -- Функция переключения состояния многовыборного дропдауна
+            function MultiDropdown:_Toggle()
+                if MultiDropdown.Opened then
+                    MultiDropdown.Opened = false
+                    MultiDropdown["OptionsContainer"].Visible = false
+                    Library:Tween(MultiDropdown["Frame"], {Size = UDim2.new(1, 0, 0, 45)})
+                else
+                    MultiDropdown.Opened = true
+                    local Count = 0
+                    
+                    for Index, Item in pairs(MultiDropdown.Items) do
+                        if Item ~= nil then
+                            Count += 1
+                        end
+                    end
+                    
+                    if Count == 0 then
+                        return
+                    end
+                    
+                    MultiDropdown["OptionsContainer"].Visible = true
+                    Library:Tween(MultiDropdown["Frame"], {Size = UDim2.new(1, 0, 0, (45 + (20 * Count) + 14))})
+                end
+            end
+            
+            -- Добавление всех опций
+            for _, Value in pairs(Options.Items) do
+                MultiDropdown:AddItem(Value)
+            end
+
+            -- Обработка событий наведения и клика на основной фрейм многовыборного дропдауна
+            MultiDropdown["Frame"].MouseEnter:Connect(function()
+                MultiDropdown.Hover = true
+                Library:Tween(MultiDropdown["Icon"], {ImageTransparency = 0})
+                Library:Tween(MultiDropdown["Title"], {TextTransparency = 0})
+                Library:Tween(MultiDropdown["Stroke"], {Transparency = 0.9})
+            end)
+
+            MultiDropdown["Frame"].MouseLeave:Connect(function()
+                MultiDropdown.Hover = false
+
+                if not MultiDropdown.MouseDown then
+                    Library:Tween(MultiDropdown["Icon"], {ImageTransparency = 0.3})
+                    Library:Tween(MultiDropdown["Title"], {TextTransparency = 0.2})
+                    Library:Tween(MultiDropdown["Stroke"], {Transparency = 0.96})
+                end
+            end)
+
+            MultiDropdown["Frame"].InputBegan:Connect(function(Input_, GPE)
+                if GPE then return end
+
+                if Input_.UserInputType == Enum.UserInputType.MouseButton1 and MultiDropdown.Hover then
+                    MultiDropdown.MouseDown = true
+                    Library:Tween(MultiDropdown["Frame"], {BackgroundColor3 = Colors.Hover})
+                    Library:Tween(MultiDropdown["Stroke"], {Transparency = 0.9})
+                    MultiDropdown:_Toggle()
+                end
+            end)
+
+            MultiDropdown["Frame"].InputEnded:Connect(function(Input_, GPE)
+                if GPE then return end
+
+                if Input_.UserInputType == Enum.UserInputType.MouseButton1 then
+                    MultiDropdown.MouseDown = false
+
+                    if MultiDropdown.Hover then
+                        Library:Tween(MultiDropdown["Frame"], {BackgroundColor3 = Colors.Primary})
+                        Library:Tween(MultiDropdown["Icon"], {ImageTransparency = 0})
+                        Library:Tween(MultiDropdown["Title"], {TextTransparency = 0})
+                        Library:Tween(MultiDropdown["Stroke"], {Transparency = 0.9})
+                    else
+                        Library:Tween(MultiDropdown["Frame"], {BackgroundColor3 = Colors.Primary})
+                        Library:Tween(MultiDropdown["Stroke"], {Transparency = 0.96})
+                    end
+                end
+            end)
+            
+            return MultiDropdown
+        end
             
             function Tab:CreateInput(Options)
                 Options = Library:Validate({
