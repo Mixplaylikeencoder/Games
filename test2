@@ -59,7 +59,7 @@ if getgenv().LvlFarm then
                         print("Кнопка Replay не найдена или неверного типа.")
                     end
                 end
-                task.wait(0.5)
+                task.wait(0.5) 
             end
         end
         
@@ -86,12 +86,12 @@ if getgenv().LvlFarm then
                 else
                     print("Демон Heian Imaginary Demon не найден или у него нет Humanoid.")
                 end
-                task.wait(0.1)
+                task.wait(0.1) 
             end
         end
+
         
         local function teleportToBossSpawn()
-
             while getgenv().LvlFarm do
                 local BossSpawn = Workspace.Objects.Spawns and Workspace.Objects.Spawns:FindFirstChild("BossSpawn")
                 if BossSpawn then
@@ -99,9 +99,10 @@ if getgenv().LvlFarm then
                 else
                     print("BossSpawn не найден.")
                 end
+                task.wait(0.1)
             end
         end
-        
+
         task.spawn(pressReplay)
         task.spawn(killDemon)
         task.spawn(teleportToBossSpawn)
