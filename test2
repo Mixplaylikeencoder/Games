@@ -1,12 +1,11 @@
 getgenv().LvlFarm = true
 
 local TeleportCheck = false
-local KeepInfYield = true -- Установите это значение в true, если хотите сохранить Infinite Yield после телепортации
 game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
-    if KeepInfYield and not TeleportCheck and queueonteleport then
+    if getgenv().LvlFarm and not TeleportCheck and queue_on_teleport then
         TeleportCheck = true
-        queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Mixplaylikeencoder/Games/refs/heads/main/test2'))()")
-        print("Скрипт Infinite Yield добавлен в очередь телепортации.")
+        queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Mixplaylikeencoder/Games/refs/heads/main/test2'))()")
+        print("Скрипт добавлен в очередь телепортации.")
     end
 end)
 
