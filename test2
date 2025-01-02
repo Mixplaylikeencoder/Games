@@ -1,13 +1,24 @@
 getgenv().LvlFarm = true
 
 local TeleportCheck = false
-game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
-    if getgenv().LvlFarm and not TeleportCheck and queue_on_teleport then
-        TeleportCheck = true
-        queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Mixplaylikeencoder/Games/refs/heads/main/test2'))()")
-        print("Скрипт добавлен в очередь телепортации.")
-    end
-end)
+local KeepInfYield = true -- Установите это значение в true, если хотите сохранить Infinite Yield после телепортации
+
+-- Проверяем, поддерживает ли эксплойт OnTeleport
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+if LocalPlayer and typeof(LocalPlayer.OnTeleport) == "function" then
+    LocalPlayer.OnTeleport:Connect(function(State)
+        if KeepInfYield and not TeleportCheck and queue_on_teleport then
+            TeleportCheck = true
+            queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Mixplaylikeencoder/Games/refs/heads/main/test2'))()")
+            print("Скрипт Infinite Yield добавлен в очередь телепортации.")
+        end
+    end)
+else
+    print("OnTeleport не поддерживается или LocalPlayer отсутствует.")
+end
+
 
 if getgenv().LvlFarm then
     -- Кэшируем необходимые сервисы и объекты
