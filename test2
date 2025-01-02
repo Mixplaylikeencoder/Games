@@ -1,6 +1,5 @@
 getgenv().LvlFarm = true
 
--- Функция для повторной загрузки скрипта после телепортации
 local TeleportCheck = false
 local KeepInfYield = true -- Установите это значение в true, если хотите сохранить Infinite Yield после телепортации
 game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
@@ -53,20 +52,110 @@ if getgenv().LvlFarm then
     elseif game.PlaceId == 16379688837 then
         print("PlaceId 16379688837 обнаружен. Запускаю задачи фарминга.")
         
-        -- Функции для фарминга
+        -- Функция для нажатия кнопки Replay
         local function pressReplay()
-            -- Код для нажатия Replay
+            print("Функция pressReplay запущена.")
+            while getgenv().LvlFarm do
+                local ReadyScreen = PlayerGui:FindFirstChild("ReadyScreen")
+                if ReadyScreen and ReadyScreen.Enabled then
+                    local ReplayButton = ReadyScreen:FindFirstChild("Replay")
+                    if ReplayButton and ReplayButton:IsA("GuiButton") then
+                        print("Нахожу кнопку Replay. Пытаюсь нажать.")
+                        
+                        -- Попытка напрямую вызвать событие нажатия кнопки
+                        if ReplayButton.MouseButton1Click then
+                            ReplayButton.MouseButton1Click:Fire()
+                            print("Кнопка Replay нажата через MouseButton1Click.")
+                        else
+                            print("ReplayButton.MouseButton1Click недоступен.")
+                        end
+                        
+                        -- Альтернативный способ активации кнопки
+                        if ReplayButton.Activate then
+                            ReplayButton:Activate()
+                            print("Кнопка Replay активирована через метод Activate.")
+                        else
+                            print("ReplayButton:Activate недоступен.")
+                        end
+                        
+                        -- Если предыдущие методы не сработали, используем VirtualInputManager
+                        print("Пробую нажать Replay через VirtualInputManager.")
+                        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.BackSlash, false, game)
+                        task.wait(0.2)
+                        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+                        task.wait(0.1)
+                        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+                        task.wait(0.1)
+                        VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.BackSlash, false, game)
+                        VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.BackSlash, false, game)
+                        print("Кнопка Replay нажата через VirtualInputManager.")
+                        
+                        -- Проверяем, было ли Replay успешно нажато
+                        if not ReadyScreen.Enabled then
+                            print("Replay успешно нажата. Выход из цикла нажатия.")
+                            break
+                        else
+                            print("Replay не была нажата. Продолжаю попытки.")
+                        end
+                    else
+                        print("Кнопка Replay не найдена или неверного типа.")
+                    end
+                end
+                task.wait(0.5) -- Задержка для предотвращения перегрузки
+            end
         end
         
+        -- Функция для телепортации к мобу и обнуления его здоровья
         local function killDemon()
-            -- Код для телепортации к демону и обнуления его здоровья
+            print("Функция killDemon запущена.")
+            while getgenv().LvlFarm do
+                local demon = Workspace.Objects and Workspace.Objects.Mobs and Workspace.Objects.Mobs:FindFirstChild("Heian Imaginary Demon")
+                if demon and demon:FindFirstChild("Humanoid") then
+                    local humanoid = demon.Humanoid
+                    -- Проверяем, есть ли HumanoidRootPart, иначе используем Humanoid's RootPart
+                    local demonPos
+                    if demon:FindFirstChild("HumanoidRootPart") then
+                        demonPos = demon.HumanoidRootPart.Position
+                    elseif humanoid and humanoid.RootPart then
+                        demonPos = humanoid.RootPart.Position
+                    else
+                        demonPos = nil
+                    end
+
+                    if demonPos then
+                        -- Телепортируемся к мобу
+                        HumanoidRootPart.CFrame = CFrame.new(demonPos)
+                        print("Телепортировался к Heian Imaginary Demon по позиции:", demonPos)
+                        
+                        -- Устанавливаем здоровье моба в 0
+                        humanoid.Health = 0
+                        print("Здоровье Heian Imaginary Demon установлено в 0.")
+                    else
+                        print("Не удалось получить позицию демона.")
+                    end
+                else
+                    print("Демон Heian Imaginary Demon не найден или у него нет Humanoid.")
+                end
+                task.wait(0.1) -- Задержка перед следующим циклом
+            end
         end
         
+        -- Функция для телепортации к BossSpawn
         local function teleportToBossSpawn()
-            -- Код для телепортации к BossSpawn
+            print("Функция teleportToBossSpawn запущена.")
+            while getgenv().LvlFarm do
+                local BossSpawn = Workspace.Objects.Spawns and Workspace.Objects.Spawns:FindFirstChild("BossSpawn")
+                if BossSpawn then
+                    HumanoidRootPart.CFrame = CFrame.new(BossSpawn.Position)
+                    print("Телепортировался к BossSpawn по позиции:", BossSpawn.Position)
+                else
+                    print("BossSpawn не найден.")
+                end
+                task.wait(1) -- Задержка перед следующим проверкой
+            end
         end
-
-        -- Запускаем функции
+        
+        -- Запускаем все функции параллельно
         task.spawn(pressReplay)
         task.spawn(killDemon)
         task.spawn(teleportToBossSpawn)
