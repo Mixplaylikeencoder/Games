@@ -6,7 +6,7 @@ local KeepInfYield = true -- Установите это значение в tru
 game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
     if KeepInfYield and not TeleportCheck and queueonteleport then
         TeleportCheck = true
-        queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+        queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Mixplaylikeencoder/Games/refs/heads/main/test2'))()")
         print("Скрипт Infinite Yield добавлен в очередь телепортации.")
     end
 end)
