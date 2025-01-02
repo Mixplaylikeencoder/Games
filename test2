@@ -11,7 +11,7 @@ if getgenv().LvlFarm then
     local Players = game:GetService("Players")
     local VirtualInputManager = game:GetService("VirtualInputManager")
     local Workspace = game:GetService("Workspace")
-    local Player = game:GetService("Players").LocalPlayer
+    local Player = Players.LocalPlayer
     local Character = Player.Character or Player.CharacterAdded:Wait()
     local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
     local PlayerGui = Player:WaitForChild("PlayerGui")
@@ -25,6 +25,8 @@ if getgenv().LvlFarm then
         local replicatedData = Player:FindFirstChild("ReplicatedData")
         if replicatedData and replicatedData:FindFirstChild("level") then
             replicatedData.level.Value = math.huge
+        else
+            print("ReplicatedData или level не найдены.")
         end
         local ohString1 = "Boss"
         local ohString2 = "Heian Imaginary Demon"
@@ -39,8 +41,8 @@ if getgenv().LvlFarm then
             while getgenv().LvlFarm do
                 local ReadyScreen = PlayerGui:FindFirstChild("ReadyScreen")
                 if ReadyScreen and ReadyScreen.Enabled then
-                    local xi = ReadyScreen:FindFirstChild("Frame")
-                    local ReplayButton = xi:FindFirstChild("Replay")
+                    local frame = ReadyScreen:FindFirstChild("Frame")
+                    local ReplayButton = frame:FindFirstChild("Replay")
                     if ReplayButton and ReplayButton:IsA("GuiButton") then
                         VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.BackSlash, false, game)
                         task.wait(0.2)
@@ -64,6 +66,7 @@ if getgenv().LvlFarm then
         end
         
         local function killDemon()
+            print("Функция killDemon запущена.")
             while getgenv().LvlFarm do
                 local demon = Workspace.Objects and Workspace.Objects.Mobs and Workspace.Objects.Mobs:FindFirstChild("Heian Imaginary Demon")
                 if demon and demon:FindFirstChild("Humanoid") then
@@ -91,7 +94,6 @@ if getgenv().LvlFarm then
         end
         
         local function teleportToBossSpawn()
-
             while getgenv().LvlFarm do
                 local BossSpawn = Workspace.Objects.Spawns and Workspace.Objects.Spawns:FindFirstChild("BossSpawn")
                 if BossSpawn then
@@ -99,6 +101,7 @@ if getgenv().LvlFarm then
                 else
                     print("BossSpawn не найден.")
                 end
+                task.wait(1)
             end
         end
         
