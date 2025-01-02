@@ -58,26 +58,10 @@ if getgenv().LvlFarm then
             while getgenv().LvlFarm do
                 local ReadyScreen = PlayerGui:FindFirstChild("ReadyScreen")
                 if ReadyScreen and ReadyScreen.Enabled then
-                    local ReplayButton = ReadyScreen:FindFirstChild("Replay")
+                    local xi = ReadyScreen:FindFirstChild("Frame")
+                    local ReplayButton = xi:FindFirstChild("Replay")
                     if ReplayButton and ReplayButton:IsA("GuiButton") then
                         print("Нахожу кнопку Replay. Пытаюсь нажать.")
-                        
-                        -- Попытка напрямую вызвать событие нажатия кнопки
-                        if ReplayButton.MouseButton1Click then
-                            ReplayButton.MouseButton1Click:Fire()
-                            print("Кнопка Replay нажата через MouseButton1Click.")
-                        else
-                            print("ReplayButton.MouseButton1Click недоступен.")
-                        end
-                        
-                        -- Альтернативный способ активации кнопки
-                        if ReplayButton.Activate then
-                            ReplayButton:Activate()
-                            print("Кнопка Replay активирована через метод Activate.")
-                        else
-                            print("ReplayButton:Activate недоступен.")
-                        end
-                        
                         -- Если предыдущие методы не сработали, используем VirtualInputManager
                         print("Пробую нажать Replay через VirtualInputManager.")
                         VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.BackSlash, false, game)
