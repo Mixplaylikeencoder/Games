@@ -1,0 +1,74 @@
+getgenv().LvlFarm = true
+
+-- Функция для повторной загрузки скрипта после телепортации
+local TeleportCheck = false
+local KeepInfYield = true -- Установите это значение в true, если хотите сохранить Infinite Yield после телепортации
+game:GetService("Players").LocalPlayer.OnTeleport:Connect(function(State)
+    if KeepInfYield and not TeleportCheck and queueonteleport then
+        TeleportCheck = true
+        queueonteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+        print("Скрипт Infinite Yield добавлен в очередь телепортации.")
+    end
+end)
+
+if getgenv().LvlFarm then
+    -- Кэшируем необходимые сервисы и объекты
+    local TeleportService = game:GetService("TeleportService")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Players = game:GetService("Players")
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    local Workspace = game:GetService("Workspace")
+    local Player = Players.LocalPlayer
+
+    -- Убеждаемся, что персонаж загружен
+    local Character = Player.Character or Player.CharacterAdded:Wait()
+    local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
+    local PlayerGui = Player:WaitForChild("PlayerGui")
+
+    if game.PlaceId == 10450270085 then
+        print("PlaceId 10450270085 обнаружен. Телепортируюсь в PlaceId 119359147980471.")
+        repeat task.wait() until game:IsLoaded()
+        TeleportService:Teleport(119359147980471, Player)
+        
+    elseif game.PlaceId == 119359147980471 then
+        print("PlaceId 119359147980471 обнаружен. Устанавливаю уровень на math.huge и создаю лобби.")
+        repeat task.wait() until game:IsLoaded()
+        local replicatedData = Player:FindFirstChild("ReplicatedData")
+        if replicatedData and replicatedData:FindFirstChild("level") then
+            replicatedData.level.Value = math.huge
+            print("Уровень установлен на math.huge.")
+        else
+            print("ReplicatedData или level не найдены.")
+        end
+        local ohString1 = "Boss"
+        local ohString2 = "Heian Imaginary Demon"
+        local ohString3 = "Nightmare"
+        local ohString4 = ""
+        ReplicatedStorage.Remotes.Server.Raids.CreateLobby:InvokeServer(ohString1, ohString2, ohString3, ohString4)
+        print("Лобби создано.")
+        task.wait(1)
+        ReplicatedStorage.Remotes.Server.Raids.StartLobby:InvokeServer(ohString1)
+        print("Лобби запущено.")
+        
+    elseif game.PlaceId == 16379688837 then
+        print("PlaceId 16379688837 обнаружен. Запускаю задачи фарминга.")
+        
+        -- Функции для фарминга
+        local function pressReplay()
+            -- Код для нажатия Replay
+        end
+        
+        local function killDemon()
+            -- Код для телепортации к демону и обнуления его здоровья
+        end
+        
+        local function teleportToBossSpawn()
+            -- Код для телепортации к BossSpawn
+        end
+
+        -- Запускаем функции
+        task.spawn(pressReplay)
+        task.spawn(killDemon)
+        task.spawn(teleportToBossSpawn)
+    end
+end
