@@ -12,13 +12,13 @@ local Release = "Build 1.72"
 
 local globalSuccess, globalResult = pcall(function()
 
-	local RayfieldFolder = "Rayfield"
+	local RayfieldFolder = "NobleHub"
 	local ConfigurationFolder = RayfieldFolder.."/Configurations"
 	local ConfigurationExtension = ".rfld"
 	local settingsTable = {
 		General = {
 			-- if needs be in order just make getSetting(name)
-			rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Rayfield Keybind'},
+			rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'NobleHub Keybind'},
 			-- buildwarnings
 			-- rayfieldprompts
 
@@ -1078,8 +1078,8 @@ local globalSuccess, globalResult = pcall(function()
 				while true do
 					task.wait(math.random(180, 600))
 					RayfieldLibrary:Notify({
-						Title = "Rayfield Interface",
-						Content = "Enjoying this UI library? Find it at sirius.menu/discord",
+						Title = "Noble Hub",
+						Content = "Like script? Join our discord server! https://discord.gg/noblehub",
 						Duration = 7,
 						Image = 4370033185,
 					})
