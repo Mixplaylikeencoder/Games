@@ -149,25 +149,9 @@ local globalSuccess, globalResult = pcall(function()
 
 	local Rayfield = useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://95248902309008")[1]
 	local buildAttempts = 0
-	local correctBuild = false
+	local correctBuild = true
 	local warned
 	local globalLoaded
-
-	repeat
-		correctBuild = true
-
-		if not warned then
-			warn('Rayfield | Build Mismatch')
-			print('Rayfield may encounter issues as you are running an incompatible interface version ('.. ((Rayfield:FindFirstChild('Build') and Rayfield.Build.Value) or 'No Build') ..').\n\nThis version of Rayfield is intended for interface build '..InterfaceBuild..'.')
-			warned = true
-		end
-
-		toDestroy, Rayfield = Rayfield, useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://95248902309008")[1]
-		if toDestroy and not useStudio then toDestroy:Destroy() end
-
-		buildAttempts = buildAttempts + 1
-	until buildAttempts >= 2
-
 	Rayfield.Enabled = false
 
 	if gethui then
@@ -994,13 +978,6 @@ local globalSuccess, globalResult = pcall(function()
 		end
 
 		if getgenv then getgenv().rayfieldCached = true end
-
-		if not correctBuild and not Settings.DisableBuildWarnings then
-			task.delay(3, 
-				function() 
-					RayfieldLibrary:Notify({Title = 'Build Mismatch', Content = 'Rayfield may encounter issues as you are running an incompatible interface version ('.. ((Rayfield:FindFirstChild('Build') and Rayfield.Build.Value) or 'No Build') ..').\n\nThis version of Rayfield is intended for interface build '..InterfaceBuild..'.\n\nTry rejoining and then run the script twice.', Image = 4335487866, Duration = 15})		
-				end)
-		end
 
 		if isfolder and not isfolder(RayfieldFolder) then
 			makefolder(RayfieldFolder)
