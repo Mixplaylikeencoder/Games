@@ -3255,9 +3255,6 @@ if not globalSuccess then
 	else
 		warn('Simulating Error Push')
 	end
-
-	warn('Rayfield Interface Suite has encountered an error.\nDevelopers have been notified and you can find more information below.\n\n')
-	error(globalResult)
 end
 
 return globalResult
