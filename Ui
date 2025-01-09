@@ -10,12 +10,16 @@ local HttpService = game:GetService('HttpService')
 local InterfaceBuild = 'Custom'
 local Release = "Build 1.72"
 
-local RayfieldFolder = "NOBLECORE"
+local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
 local settingsTable = {
 	General = {
+		-- if needs be in order just make getSetting(name)
 		rayfieldOpen = {Type = 'bind', Value = 'K', Name = 'Rayfield Keybind'},
+		-- buildwarnings
+		-- rayfieldprompts
+
 	},
 	System = {
 		usageAnalytics = {Type = 'toggle', Value = true, Name = 'Anonymised Analytics'},
@@ -43,6 +47,7 @@ local function loadSettings()
 ]]
 			end
 
+
 			if file then
 				local success, decodedFile = pcall(function() return HttpService:JSONDecode(file) end)
 				if success then
@@ -53,6 +58,7 @@ local function loadSettings()
 			else
 				file = {}
 			end
+
 
 			if not settingsCreated then 
 				cachedSettings = file
@@ -87,54 +93,49 @@ local RayfieldLibrary = {
 	Flags = {},
 	Theme = {
 		Default = {
-			TextColor = Color3.fromRGB(200, 200, 255),
-			Background = Color3.fromRGB(20, 20, 91),
-			Topbar = Color3.fromRGB(20, 20, 91),
-			Shadow = Color3.fromRGB(25, 20, 70),
+			TextColor = Color3.fromRGB(200, 200, 255), -- Light text for readability on dark background
 
-			NotificationBackground = Color3.fromRGB(53, 45, 126),
-			NotificationActionsBackground = Color3.fromRGB(48, 40, 116),
+			Background = Color3.fromRGB(20, 20, 91), -- Deep background to match the dark blue-purple tone
+			Topbar = Color3.fromRGB(20, 20, 91), -- Slightly lighter for the top bar
+			Shadow = Color3.fromRGB(25, 20, 70), -- Subtle shadow for depth
 
-			TabBackground = Color3.fromRGB(40, 35, 100),
-			TabStroke = Color3.fromRGB(60, 50, 140),
-			TabBackgroundSelected = Color3.fromRGB(53, 45, 126),
-			TabTextColor = Color3.fromRGB(180, 180, 240),
-			SelectedTabTextColor = Color3.fromRGB(240, 240, 255),
+			NotificationBackground = Color3.fromRGB(53, 45, 126), -- Primary color for notifications
+			NotificationActionsBackground = Color3.fromRGB(48, 40, 116), -- Slight contrast for actions
 
-			ElementBackground = Color3.fromRGB(53, 45, 126),
-			ElementBackgroundHover = Color3.fromRGB(45, 38, 110),
-			SecondaryElementBackground = Color3.fromRGB(50, 42, 120),
-			ElementStroke = Color3.fromRGB(70, 60, 160),
+			TabBackground = Color3.fromRGB(40, 35, 100), -- Darker tab background to blend with the theme
+			TabStroke = Color3.fromRGB(60, 50, 140), -- Stroke to add separation
+			TabBackgroundSelected = Color3.fromRGB(53, 45, 126), -- Highlight for selected tab to match primary color
+			TabTextColor = Color3.fromRGB(180, 180, 240), -- Light text color for tab labels
+			SelectedTabTextColor = Color3.fromRGB(240, 240, 255), -- Bright color for selected tab text
+
+			ElementBackground = Color3.fromRGB(53, 45, 126), -- Main element background color
+			ElementBackgroundHover = Color3.fromRGB(45, 38, 110), -- Darker shade on hover instead of black
+			SecondaryElementBackground = Color3.fromRGB(50, 42, 120), -- Unified look for labels/paragraphs
+			ElementStroke = Color3.fromRGB(70, 60, 160), -- Element stroke for borders
 			SecondaryElementStroke = Color3.fromRGB(70, 60, 160),
 
-			SliderBackground = Color3.fromRGB(100, 90, 170),
-			SliderProgress = Color3.fromRGB(120, 110, 190),
-			SliderStroke = Color3.fromRGB(90, 80, 160),
+			SliderBackground = Color3.fromRGB(100, 90, 170), -- Slider background to blend with theme
+			SliderProgress = Color3.fromRGB(120, 110, 190), -- Progress color for contrast
+			SliderStroke = Color3.fromRGB(90, 80, 160), -- Stroke to match the slider colors
 
-			ToggleBackground = Color3.fromRGB(53, 45, 126),
+			ToggleBackground = Color3.fromRGB(53, 45, 126), -- Toggle background in primary color
 			ToggleEnabled = Color3.fromRGB(100, 93, 181),
-			ToggleDisabled = Color3.fromRGB(80, 73, 161),
-			ToggleEnabledStroke = Color3.fromRGB(107, 100, 206),
-			ToggleDisabledStroke = Color3.fromRGB(97, 90, 196),
+			ToggleDisabled = Color3.fromRGB(80, 73, 161), -- Muted for disabled toggle
+			ToggleEnabledStroke = Color3.fromRGB(107, 100, 206), -- Lighter stroke for enabled toggle
+			ToggleDisabledStroke = Color3.fromRGB(97, 90, 196), -- Subtle stroke for disabled
 			ToggleEnabledOuterStroke = Color3.fromRGB(123, 106, 246),
 			ToggleDisabledOuterStroke = Color3.fromRGB(93, 76, 216),
 
-			DropdownSelected = Color3.fromRGB(53, 45, 126),
-			DropdownUnselected = Color3.fromRGB(45, 40, 100),
+			DropdownSelected = Color3.fromRGB(53, 45, 126), -- Main color for dropdown selection
+			DropdownUnselected = Color3.fromRGB(45, 40, 100), -- Slightly darker for unselected state
 
-			InputBackground = Color3.fromRGB(53, 45, 126),
-			InputStroke = Color3.fromRGB(80, 70, 150),
-			PlaceholderColor = Color3.fromRGB(150, 140, 200)
+			InputBackground = Color3.fromRGB(53, 45, 126), -- Input background in primary color
+			InputStroke = Color3.fromRGB(80, 70, 150), -- Input border for distinction
+			PlaceholderColor = Color3.fromRGB(150, 140, 200) -- Subtle lighter color for placeholders
 		},
-		
-		-- Пример ещё одной темы. В случае чего, передавай Theme = "DarkPink"
-		-- DarkPink = {
-		-- 	TextColor = Color3.fromRGB(255, 225, 225),
-		-- 	Background = Color3.fromRGB(45, 0, 60),
-		-- 	...
-		-- }
 	}
 }
+
 
 -- Services
 local UserInputService = game:GetService("UserInputService")
@@ -143,13 +144,16 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
+
 local Rayfield = useStudio and script.Parent:FindFirstChild('Rayfield') or game:GetObjects("rbxassetid://95995058196766")[1]
 local buildAttempts = 0
 local correctBuild = false
 local warned
 local globalLoaded
 
+
 Rayfield.Enabled = false
+
 
 if gethui then
 	Rayfield.Parent = gethui()
@@ -178,6 +182,7 @@ elseif not useStudio then
 	end
 end
 
+
 local minSize = Vector2.new(1024, 768)
 local useMobileSizing
 
@@ -189,7 +194,9 @@ if UserInputService.TouchEnabled then
 	useMobilePrompt = true
 end
 
+
 -- Object Variables
+
 local Main = Rayfield.Main
 local MPrompt = Rayfield:FindFirstChild('Prompt')
 local Topbar = Main.Topbar
@@ -206,34 +213,26 @@ local dragOffsetMobile = 150
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
+
 local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
 
 -- Variables
+
 local CFileName = nil
 local CEnabled = false
 local Minimised = false
 local Hidden = false
 local Debounce = false
 local searchOpen = false
+local Notifications = Rayfield.Notifications
 
--- ВАЖНО: тут всегда задаём дефолтную тему, чтобы не было nil
 local SelectedTheme = RayfieldLibrary.Theme.Default
 
 local function ChangeTheme(Theme)
 	if typeof(Theme) == 'string' then
-		-- Проверяем, есть ли реально такая тема
-		if RayfieldLibrary.Theme[Theme] then
-			SelectedTheme = RayfieldLibrary.Theme[Theme]
-		else
-			warn("issue rendering theme. no theme on file -> выбрана Default")
-			SelectedTheme = RayfieldLibrary.Theme["Default"]
-		end
+		SelectedTheme = RayfieldLibrary.Theme[Theme]
 	elseif typeof(Theme) == 'table' then
 		SelectedTheme = Theme
-	else
-		-- Если вообще что-то левое, fallback на Default
-		warn("issue rendering theme. no theme on file -> выбрана Default")
-		SelectedTheme = RayfieldLibrary.Theme["Default"]
 	end
 
 	Rayfield.Main.BackgroundColor3 = SelectedTheme.Background
@@ -260,21 +259,14 @@ local function ChangeTheme(Theme)
 	end
 
 	for _, text in ipairs(Rayfield:GetDescendants()) do
-		if text.Parent.Parent ~= Rayfield.Notifications then
-			if text:IsA('TextLabel') or text:IsA('TextBox') then 
-				text.TextColor3 = SelectedTheme.TextColor 
-			end
+		if text.Parent.Parent ~= Notifications then
+			if text:IsA('TextLabel') or text:IsA('TextBox') then text.TextColor3 = SelectedTheme.TextColor end
 		end
 	end
 
 	for _, TabPage in ipairs(Elements:GetChildren()) do
 		for _, Element in ipairs(TabPage:GetChildren()) do
-			if Element.ClassName == "Frame" and Element.Name ~= "Placeholder" 
-				and Element.Name ~= "SectionSpacing" 
-				and Element.Name ~= "Divider" 
-				and Element.Name ~= "SectionTitle" 
-				and Element.Name ~= "SearchTitle-fsefsefesfsefesfesfThanks" then
-				
+			if Element.ClassName == "Frame" and Element.Name ~= "Placeholder" and Element.Name ~= "SectionSpacing" and Element.Name ~= "Divider" and Element.Name ~= "SectionTitle" and Element.Name ~= "SearchTitle-fsefsefesfsefesfesfThanks" then
 				Element.BackgroundColor3 = SelectedTheme.ElementBackground
 				Element.UIStroke.Color = SelectedTheme.ElementStroke
 			end
@@ -344,6 +336,7 @@ local function makeDraggable(object, dragObject, enableTaptic, tapticOffset)
 		local inputType = input.UserInputType.Name
 		if inputType == "MouseButton1" or inputType == "Touch" then
 			dragging = true
+
 			relative = object.AbsolutePosition + object.AbsoluteSize * object.AnchorPoint - UserInputService:GetMouseLocation()
 			if enableTaptic and not Hidden then
 				TweenService:Create(dragBarCosmetic, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Size = UDim2.new(0, 110, 0, 4), BackgroundTransparency = 0}):Play()
@@ -387,6 +380,7 @@ local function makeDraggable(object, dragObject, enableTaptic, tapticOffset)
 	end)
 end
 
+
 local function PackColor(Color)
 	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
 end    
@@ -399,11 +393,9 @@ local function LoadConfiguration(Configuration)
 	local success, Data = pcall(function() return HttpService:JSONDecode(Configuration) end)
 	local changed
 
-	if not success then 
-		warn('Rayfield had an issue decoding the configuration file, please try delete the file and reopen Rayfield.') 
-		return 
-	end
+	if not success then warn('Rayfield had an issue decoding the configuration file, please try delete the file and reopen Rayfield.') return end
 
+	-- Iterate through current UI elements' flags
 	for FlagName, Flag in pairs(RayfieldLibrary.Flags) do
 		local FlagValue = Data[FlagName]
 
@@ -422,6 +414,7 @@ local function LoadConfiguration(Configuration)
 		else
 			warn("Rayfield | Unable to find '"..FlagName.. "' in the save file.")
 			print("The error above may not be an issue if new elements have been added or not been set values.")
+			--RayfieldLibrary:Notify({Title = "Rayfield Flags", Content = "Rayfield was unable to find '"..FlagName.. "' in the save file. Check sirius.menu/discord for help.", Image = 3944688398})
 		end
 	end
 
@@ -430,6 +423,10 @@ end
 
 local function SaveConfiguration()
 	if not CEnabled or not globalLoaded then return end
+
+	if debugX then
+		print('Saving')
+	end
 
 	local Data = {}
 	for i, v in pairs(RayfieldLibrary.Flags) do
@@ -449,9 +446,7 @@ local function SaveConfiguration()
 	end
 
 	if useStudio then
-		if script.Parent:FindFirstChild('configuration') then 
-			script.Parent.configuration:Destroy() 
-		end
+		if script.Parent:FindFirstChild('configuration') then script.Parent.configuration:Destroy() end
 
 		local ScreenGui = Instance.new("ScreenGui")
 		ScreenGui.Parent = script.Parent
@@ -466,25 +461,33 @@ local function SaveConfiguration()
 		TextBox.ClearTextOnFocus = false
 	end
 
+	if debugX then
+		warn(HttpService:JSONEncode(Data))
+	end
+
 	if writefile then
 		writefile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension, tostring(HttpService:JSONEncode(Data)))
 	end
 end
 
-function RayfieldLibrary:Notify(data)
+function RayfieldLibrary:Notify(data) -- action e.g open messages
 	task.spawn(function()
-		local newNotification = Rayfield.Notifications.Template:Clone()
+
+		-- Notification Object Creation
+		local newNotification = Notifications.Template:Clone()
 		newNotification.Name = data.Title or 'No Title Provided'
-		newNotification.Parent = Rayfield.Notifications
-		newNotification.LayoutOrder = #Rayfield.Notifications:GetChildren()
+		newNotification.Parent = Notifications
+		newNotification.LayoutOrder = #Notifications:GetChildren()
 		newNotification.Visible = false
 
+		-- Set Data
 		newNotification.Title.Text = data.Title or "Unknown Title"
 		newNotification.Description.Text = data.Content or "Unknown Content"
 
 		if data.Image then
 			if typeof(data.Image) == 'string' then
 				local asset = getIcon(data.Image)
+
 				newNotification.Icon.Image = 'rbxassetid://'..asset.id
 				newNotification.Icon.ImageRectOffset = asset.imageRectOffset
 				newNotification.Icon.ImageRectSize = asset.imageRectSize
@@ -494,6 +497,8 @@ function RayfieldLibrary:Notify(data)
 		else
 			newNotification.Icon.Image = "rbxassetid://" .. 0
 		end
+
+		-- Set initial transparency values
 
 		newNotification.Title.TextColor3 = SelectedTheme.TextColor
 		newNotification.Description.TextColor3 = SelectedTheme.TextColor
@@ -519,54 +524,43 @@ function RayfieldLibrary:Notify(data)
 			print("Notification Actions are being sunset for now, keep up to date on when they're back in the discord. (sirius.menu/discord)")
 		end
 
+		-- Calculate textbounds and set initial values
 		local bounds = {newNotification.Title.TextBounds.Y, newNotification.Description.TextBounds.Y}
-		newNotification.Size = UDim2.new(1, -60, 0, -Rayfield.Notifications:FindFirstChild("UIListLayout").Padding.Offset)
+		newNotification.Size = UDim2.new(1, -60, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
 
 		newNotification.Icon.Size = UDim2.new(0, 32, 0, 32)
 		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, 0)
 
-		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), 
-			{Size = UDim2.new(1, 0, 0, math.max(bounds[1] + bounds[2] + 31, 60))}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, math.max(bounds[1] + bounds[2] + 31, 60))}):Play()
 
 		task.wait(0.15)
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), 
-			{BackgroundTransparency = 0.45}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{TextTransparency = 0}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
 		task.wait(0.05)
-		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{ImageTransparency = 0}):Play()
+
+		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
 
 		task.wait(0.05)
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{TextTransparency = 0.35}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), 
-			{Transparency = 0.95}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{ImageTransparency = 0.82}):Play()
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
 
 		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
 		task.wait(data.Duration or waitDuration)
 
 		newNotification.Icon.Visible = false
-		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), 
-			{BackgroundTransparency = 1}):Play()
-		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), 
-			{Transparency = 1}):Play()
-		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{ImageTransparency = 1}):Play()
-		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{TextTransparency = 1}):Play()
-		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), 
-			{TextTransparency = 1}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), 
-			{Size = UDim2.new(1, -90, 0, 0)}):Play()
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, 0)}):Play()
 
 		task.wait(1)
-		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), 
-			{Size = UDim2.new(1, -90, 0, -Rayfield.Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
+
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
 
 		newNotification.Visible = false
 		newNotification:Destroy()
@@ -600,10 +594,7 @@ local function openSearch()
 
 	Main.Search.Input:CaptureFocus()
 	TweenService:Create(Main.Search.Shadow, TweenInfo.new(0.05, Enum.EasingStyle.Quint), {ImageTransparency = 0.95}):Play()
-	TweenService:Create(Main.Search, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {
-		Position = UDim2.new(0.5, 0, 0, 57), 
-		BackgroundTransparency = 0.9
-	}):Play()
+	TweenService:Create(Main.Search, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Position = UDim2.new(0.5, 0, 0, 57), BackgroundTransparency = 0.9}):Play()
 	TweenService:Create(Main.Search.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.8}):Play()
 	TweenService:Create(Main.Search.Input, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 	TweenService:Create(Main.Search.Search, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.5}):Play()
@@ -613,10 +604,7 @@ end
 local function closeSearch()
 	searchOpen = false
 
-	TweenService:Create(Main.Search, TweenInfo.new(0.35, Enum.EasingStyle.Quint), {
-		BackgroundTransparency = 1, 
-		Size = UDim2.new(1, -55, 0, 30)
-	}):Play()
+	TweenService:Create(Main.Search, TweenInfo.new(0.35, Enum.EasingStyle.Quint), {BackgroundTransparency = 1, Size = UDim2.new(1, -55, 0, 30)}):Play()
 	TweenService:Create(Main.Search.Search, TweenInfo.new(0.15, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 	TweenService:Create(Main.Search.Shadow, TweenInfo.new(0.15, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 	TweenService:Create(Main.Search.UIStroke, TweenInfo.new(0.15, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
@@ -665,6 +653,7 @@ local function Hide(notify: boolean?)
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 	TweenService:Create(Topbar.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 
+
 	for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 		if TopbarButton.ClassName == "ImageButton" then
 			TweenService:Create(TopbarButton, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
@@ -691,9 +680,7 @@ local function Hide(notify: boolean?)
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 						end
 						for _, child in ipairs(element:GetChildren()) do
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" 
-							or child.ClassName == "TextBox" or child.ClassName == "ImageButton" 
-							or child.ClassName == "ImageLabel" then
+							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
 								child.Visible = false
 							end
 						end
@@ -711,14 +698,13 @@ local function Maximise()
 	Debounce = true
 	Topbar.ChangeSize.Image = "rbxassetid://"..10137941941
 
+
 	TweenService:Create(Topbar.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
 	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), 
-		{Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
-	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), 
-		{Size = UDim2.new(0, 500, 0, 45)}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
+	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 45)}):Play()
 	TabList.Visible = true
 	task.wait(0.2)
 
@@ -737,9 +723,7 @@ local function Maximise()
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 						end
 						for _, child in ipairs(element:GetChildren()) do
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" 
-							or child.ClassName == "TextBox" or child.ClassName == "ImageButton" 
-							or child.ClassName == "ImageLabel" then
+							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
 								child.Visible = true
 							end
 						end
@@ -748,6 +732,7 @@ local function Maximise()
 			end
 		end
 	end
+
 
 	task.wait(0.1)
 
@@ -764,23 +749,23 @@ local function Maximise()
 				TweenService:Create(tabbtn.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.2}):Play()
 				TweenService:Create(tabbtn.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {Transparency = 0.5}):Play()
 			end
+
 		end
 	end
+
 
 	task.wait(0.5)
 	Debounce = false
 end
 
+
 local function Unhide()
 	Debounce = true
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 	Main.Visible = true
-	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), 
-		{Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
-	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), 
-		{Size = UDim2.new(0, 500, 0, 45)}):Play()
-	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), 
-		{ImageTransparency = 0.6}):Play()
+	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = useMobileSizing and UDim2.new(0, 500, 0, 275) or UDim2.new(0, 500, 0, 475)}):Play()
+	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 500, 0, 45)}):Play()
+	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.6}):Play()
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar.Divider, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
@@ -827,9 +812,7 @@ local function Unhide()
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 						end
 						for _, child in ipairs(element:GetChildren()) do
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" 
-							or child.ClassName == "TextBox" or child.ClassName == "ImageButton" 
-							or child.ClassName == "ImageLabel" then
+							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
 								child.Visible = true
 							end
 						end
@@ -873,9 +856,7 @@ local function Minimise()
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
 						end
 						for _, child in ipairs(element:GetChildren()) do
-							if child.ClassName == "Frame" or child.ClassName == "TextLabel" 
-							or child.ClassName == "TextBox" or child.ClassName == "ImageButton" 
-							or child.ClassName == "ImageLabel" then
+							if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
 								child.Visible = false
 							end
 						end
@@ -893,13 +874,13 @@ local function Minimise()
 	TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Size = UDim2.new(0, 495, 0, 45)}):Play()
 
 	task.wait(0.3)
+
 	Elements.Visible = false
 	TabList.Visible = false
 
 	task.wait(0.2)
 	Debounce = false
 end
-
 local function updateSettings()
 	local encoded
 	local success, err = pcall(function()
@@ -936,6 +917,7 @@ local function createSettings(window)
 		Elements['Rayfield Settings'].LayoutOrder = 1000
 	end
 
+	-- Create sections and elements
 	for categoryName, settingCategory in pairs(settingsTable) do
 		newTab:CreateSection(categoryName)
 
@@ -988,12 +970,15 @@ function RayfieldLibrary:CreateWindow(Settings)
 		if getgenv and not getgenv().rayfieldCached then
 			Rayfield.Enabled = true
 			Rayfield.Loading.Visible = true
+
 			task.wait(1.4)
 			Rayfield.Loading.Visible = false
 		end
 	end
 
 	if getgenv then getgenv().rayfieldCached = true end
+
+
 
 	if isfolder and not isfolder(RayfieldFolder) then
 		makefolder(RayfieldFolder)
@@ -1010,6 +995,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 	LoadingFrame.Title.TextTransparency = 1
 	LoadingFrame.Subtitle.TextTransparency = 1
+
 	LoadingFrame.Version.TextTransparency = 1
 	LoadingFrame.Title.Text = Settings.LoadingTitle or "Rayfield"
 	LoadingFrame.Subtitle.Text = Settings.LoadingSubtitle or "Interface Suite"
@@ -1025,6 +1011,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 		if Settings.Icon then
 			if typeof(Settings.Icon) == 'string' then
 				local asset = getIcon(Settings.Icon)
+
 				Topbar.Icon.Image = 'rbxassetid://'..asset.id
 				Topbar.Icon.ImageRectOffset = asset.imageRectOffset
 				Topbar.Icon.ImageRectSize = asset.imageRectSize
@@ -1042,15 +1029,17 @@ function RayfieldLibrary:CreateWindow(Settings)
 		dragBar.Visible = true
 	end
 
-	-- Вызов ChangeTheme c безопасной проверкой
 	if Settings.Theme then
 		local success, result = pcall(ChangeTheme, Settings.Theme)
 		if not success then
-			warn("issue rendering theme. fallback on Default")
-			ChangeTheme("Default")
+			local success, result2 = pcall(ChangeTheme, 'Default')
+			if not success then
+				warn('CRITICAL ERROR - NO DEFAULT THEME')
+				print(result2)
+			end
+			warn('issue rendering theme. no theme on file')
+			print(result)
 		end
-	else
-		ChangeTheme("Default")
 	end
 
 	Topbar.Visible = false
