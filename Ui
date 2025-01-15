@@ -1,5 +1,3 @@
-00:11:19 ERROR: UIStroke is not a valid member of Frame "HiddenUI.Rayfield.Main.Elements.Webhook.Divider"
-
 local windowCreated = false
 
 -- Environment Check
