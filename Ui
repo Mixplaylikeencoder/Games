@@ -673,7 +673,6 @@ local function Hide(notify: boolean?)
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
 	TweenService:Create(Topbar.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 	TweenService:Create(dragBarCosmetic, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
-	Main.Topbar.ImageLabel.Visble = false
 	if useMobilePrompt and MPrompt then
 		TweenService:Create(MPrompt, TweenInfo.new(0.5, Enum.EasingStyle.Exponential), {
 			Size = UDim2.new(0, 120, 0, 30),
@@ -768,7 +767,6 @@ local function Maximise()
 	TabList.Visible = true
 	task.wait(0.2)
 	Elements.Visible = true
-	Main.Topbar.ImageLabel.Visble = true
 	for _, tab in ipairs(Elements:GetChildren()) do
 		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
 			for _, element in ipairs(tab:GetChildren()) do
@@ -874,7 +872,7 @@ local function Unhide()
 		or UDim2.new(0.5, 0, 0.5, dragOffset)
 
 	dragInteract.Visible = true
-	Main.Topbar.ImageLabel.Visble = true
+
 	for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 		if TopbarButton.ClassName == "ImageButton" then
 			if TopbarButton.Name == 'Icon' then
@@ -1021,7 +1019,6 @@ local function Minimise()
 	task.wait(0.3)
 	Elements.Visible = false
 	TabList.Visible = false
-	Main.Topbar.ImageLabel.Visble = false
 	task.wait(0.2)
 	Debounce = false
 end
