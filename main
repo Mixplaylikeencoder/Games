@@ -1,0 +1,8 @@
+local ID = game.PlaceID
+if ID == 10450270085 or ID == 16379688837 or ID == 119359147980471 or ID == 16379684339 or ID == 78904562518018 then
+  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/996cd9005fd284e13a47bb7334126a12.lua"))()
+elseif ID == 115815718131154 then
+  loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/5a37386336d943b6b3a6e83e0aae205d.lua"))()
+else
+  print("womp womp game no supporting(")
+end
